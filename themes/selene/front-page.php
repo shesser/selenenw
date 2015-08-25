@@ -1,4 +1,3 @@
-<?php /* Template Name: Home Template */ ?>
 <?php get_header(); ?>
 <!-- Main -->
 <main class="main" role="main">

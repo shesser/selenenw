@@ -84,3 +84,28 @@ function number_to_words ( $number ) {
     $number_in_words = array( 'one', 'two', 'three', 'four' );
     return $number_in_words[ $number - 1 ];
 }
+
+function selenenw_post_thumbnail() {
+    if ( post_password_required() || is_attachment() || ! has_post_thumbnail() ) {
+        return;
+    }
+
+    if ( is_singular() ) :
+        ?>
+
+        <div class="entry-featured">
+            <?php the_post_thumbnail(); ?>
+        </div><!-- .post-thumbnail -->
+
+    <?php else : ?>
+
+        <figure>
+            <a href="<?php the_permalink(); ?>">
+                <?php
+                the_post_thumbnail( 'post-thumbnail', array( 'alt' => get_the_title() ) );
+                ?>
+            </a>
+        </figure>
+
+    <?php endif; // End is_singular()
+}
