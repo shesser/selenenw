@@ -5,7 +5,7 @@
     <div class="hero" style="background:url(<?php uf( 'ban_image' ); ?>) 50% 50% no-repeat;">
         <article>
             <h1 class="wow fadeInDown"><?php uf( 'ban_text' ); ?></h1>
-            <a href="<?php uf( 'ban_button_link' ); ?>" title="<?php uf( 'ban_button_text' ); ?>" class="anchor button white medium wow fadeInUp"><?php uf( 'ban_button_text' ); ?></a>
+            <a href="<?php uf( 'ban_button_link' ); ?>" title="<?php strip_tags( uf( 'ban_button_text' ) ); ?>" class="anchor button white medium wow fadeInUp"><?php uf( 'ban_button_text' ); ?></a>
         </article>
     </div>
     <!-- //Hero -->
@@ -23,7 +23,7 @@
             <ul class="wrap">';
 
         for ( $i=0; $i < ( ( count ( $ctas ) > 4 ) ? 4 : count( $ctas ) ); $i++ ) {
-            echo '<li><a href="' . $ctas[ $i ][ 'cta_link' ] . '" title="' . $ctas[ $i ][ 'cta_text' ] . '">
+            echo '<li><a href="' . $ctas[ $i ][ 'cta_link' ] . '" title="' . strip_tags( $ctas[ $i ][ 'cta_text' ] ) . '">
                     <img src="' . $ctas[ $i ][ 'cta_image' ] . '" alt="" /> ' . $ctas[ $i ][ 'cta_text' ] . '
                 </a></li>';
         }
@@ -45,7 +45,7 @@
                 uf ( 'full_cta_1_description' );
             endif; ?>
             <?php if( uf ( 'full_cta_1_button_text', '', false ) ) : ?>
-                <a href="<?php uf ( 'full_cta_1_button_link' ); ?>" title="<?php uf ( 'full_cta_1_button_text' ); ?>" class="button white medium"><?php uf ( 'full_cta_1_button_text' ); ?></a>
+                <a href="<?php uf ( 'full_cta_1_button_link' ); ?>" title="<?php strip_tags( uf( 'full_cta_1_button_text' ) ); ?>" class="button white medium"><?php uf ( 'full_cta_1_button_text' ); ?></a>
             <?php endif; ?>
         </div>
     </section>
@@ -166,7 +166,7 @@
 
     <!-- Photo -->
     <?php if( uf( 'parallax_cta_image', '', false ) || uf ( 'parallax_cta_title', '', false ) || uf ( 'parallax_cta_description', '', false ) ||  uf ( 'parallax_cta_button_text', '', false ) ) : ?>
-    <section class="photo" style="background:url(<?php uf( 'parallax_cta_image'); ?>) 50% 50% no-repeat;background-size:cover;">
+    <section class="photo" style="background:url(<?php uf( 'parallax_cta_image'); ?>) 50% 50% fixed no-repeat;background-size:cover;">
         <div class="wrap center">
             <?php if( uf ( 'parallax_cta_title', '', false ) ) : ?>
                 <h2><?php uf ( 'parallax_cta_title' ); ?></h2>
@@ -175,7 +175,7 @@
                 uf ( 'parallax_cta_description' );
             endif; ?>
             <?php if( uf ( 'parallax_cta_button_text', '', false ) ) : ?>
-                <a href="<?php uf ( 'parallax_cta_button_link' ); ?>" title="<?php uf ( 'parallax_cta_button_text' ); ?>" class="button white medium"><?php uf ( 'parallax_cta_button_text' ); ?></a>
+                <a href="<?php uf ( 'parallax_cta_button_link' ); ?>" title="<?php strip_tags( uf( 'parallax_cta_button_text' ) ); ?>" class="button white medium"><?php uf ( 'parallax_cta_button_text' ); ?></a>
             <?php endif; ?>
         </div>
     </section>
@@ -275,7 +275,7 @@
     <section class="cta grey">
         <div class="wrap">
             <?php if( uf ( 'bar_cta_button_text', '', false ) ) : ?>
-                <a href="<?php uf ( 'bar_cta_button_link' ); ?>" title="<?php uf ( 'bar_cta_button_text'); ?>" class="button white medium right"><?php uf ( 'bar_cta_button_text'); ?></a>
+                <a href="<?php uf ( 'bar_cta_button_link' ); ?>" title="<?php strip_tags( uf ( 'bar_cta_button_text' ) ); ?>" class="button white medium right"><?php uf ( 'bar_cta_button_text'); ?></a>
             <?php endif; ?>
             <?php if ( uf ( 'bar_cta_text', '', false ) ) : ?>
                 <h3><?php uf ( 'bar_cta_text' ); ?></h3>
@@ -364,7 +364,7 @@
                     uf ( 'full_cta_1_description' );
                 endif; ?>
                 <?php if( uf ( 'full_cta_2_button_text', '', false ) ) : ?>
-                    <a href="<?php uf ( 'full_cta_2_button_link' ); ?>" title="<?php uf ( 'full_cta_2_button_text' ); ?>" class="button white medium"><?php uf ( 'full_cta_2_button_text' ); ?></a>
+                    <a href="<?php uf ( 'full_cta_2_button_link' ); ?>" title="<?php strip_tags( uf ( 'full_cta_2_button_text' ) ); ?>" class="button white medium"><?php uf ( 'full_cta_2_button_text' ); ?></a>
                 <?php endif; ?>
             </div>
         </section>

@@ -324,7 +324,7 @@ section.white h2		{padding-bottom:38px;}
 .app ol.custom		{margin-top:10px;}
 .app ol.custom strong 	{font-size:17px;}
 
-.photo				{overflow:hidden;position:static !important;padding:70px 0 80px;color:#fff; background-attachment: fixed;-webkit-background-size: cover !important;}
+.photo				{overflow:hidden;position:static !important;padding:70px 0 80px;color:#fff; background-attachment: fixed;-webkit-background-size: cover !important;background-size:cover;}
 .photo .wrap.center 	{position:relative;z-index:2;max-width:50%;}
 .photo h2			{color:#fff;padding:0 0 40px !important;}
 .photo p 			{font-size:18px;font-weight:600;padding:0 0 50px;}

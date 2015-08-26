@@ -109,3 +109,16 @@ function selenenw_post_thumbnail() {
 
     <?php endif; // End is_singular()
 }
+
+// Add specific CSS class by filter
+add_filter( 'body_class', 'my_class_names' );
+function my_class_names( $classes ) {
+
+    // Applying blog class on <body> is throwing off
+    // the template. So we have removed the blog class
+    if ( $classes[0] == 'blog' )
+        unset( $classes[0] );
+
+    // return the $classes array
+    return $classes;
+}
