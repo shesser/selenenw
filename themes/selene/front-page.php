@@ -1,3 +1,4 @@
+<?php /*Template Name: Home*/ ?>
 <?php get_header(); ?>
 <!-- Main -->
 <main class="main" role="main">
