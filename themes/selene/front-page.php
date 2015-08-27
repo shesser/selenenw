@@ -152,7 +152,7 @@
     <!-- //Testimonials -->
 
     <!-- App -->
-    <section class="white app">
+    <!--<section class="white app">
         <div class="wrap center">
             <h2>Download our mobile booking app</h2>
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorperut commodo consequat. </p>
@@ -162,7 +162,7 @@
                 <li class="wow fadeIn" data-wow-delay=".4s"><strong>Brag to your friends</strong><br />Lorem ipsum dolor sit consectetuer adipiscing elit, sed diam nonummy nibh amet .</li>
             </ol>
         </div>
-    </section>
+    </section>-->
     <!-- //App -->
 
     <!-- Photo -->
@@ -184,7 +184,7 @@
     <!-- //Photo -->
 
     <!-- Services -->
-    <section class="white icons">
+    <!--<section class="white icons">
         <div class="wrap">
             <div class="row">
                 <!-- Item -->
@@ -268,7 +268,7 @@
                 <!-- //Item -->
             </div>
         </div>
-    </section>
+    </section>-->
     <!-- //Services -->
 
     <!-- Call to action -->
