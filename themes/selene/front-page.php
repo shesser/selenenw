@@ -151,20 +151,6 @@
     </section>
     <!-- //Testimonials -->
 
-    <!-- App -->
-    <!--<section class="white app">
-        <div class="wrap center">
-            <h2>Download our mobile booking app</h2>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorperut commodo consequat. </p>
-            <ol class="custom triplets">
-                <li class="wow fadeIn"><strong>Find a yacht</strong><br />Lorem ipsum dolor sit consectetuer adipiscing elit, sed diam nonummy nibh amet .</li>
-                <li class="wow fadeIn" data-wow-delay=".2s"><strong>Make a booking</strong><br />Lorem ipsum dolor sit consectetuer adipiscing elit, sed diam nonummy nibh amet .</li>
-                <li class="wow fadeIn" data-wow-delay=".4s"><strong>Brag to your friends</strong><br />Lorem ipsum dolor sit consectetuer adipiscing elit, sed diam nonummy nibh amet .</li>
-            </ol>
-        </div>
-    </section>-->
-    <!-- //App -->
-
     <!-- Photo -->
     <?php if( uf( 'parallax_cta_image', '', false ) || uf ( 'parallax_cta_title', '', false ) || uf ( 'parallax_cta_description', '', false ) ||  uf ( 'parallax_cta_button_text', '', false ) ) : ?>
     <section class="photo" style="background:url(<?php uf( 'parallax_cta_image'); ?>) 50% 50% fixed no-repeat;background-size:cover;">
@@ -182,94 +168,6 @@
     </section>
     <? endif; ?>
     <!-- //Photo -->
-
-    <!-- Services -->
-    <!--<section class="white icons">
-        <div class="wrap">
-            <div class="row">
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_compas_2"></span>
-                    </a>
-                    <h4><a href="#">Our sailing destinations</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".2s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_map_3"></span>
-                    </a>
-                    <h4><a href="#">Where to sail guide</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".4s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_tags_1"></span>
-                    </a>
-                    <h4><a href="#">Our yachts and pricing</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".6s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_pupil_boy"></span>
-                    </a>
-                    <h4><a href="#">New to sailing?</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_anchor"></span>
-                    </a>
-                    <h4><a href="#">Sail with a skipper</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".2s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_certificate"></span>
-                    </a>
-                    <h4><a href="#">Skipper training</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".4s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_holliday"></span>
-                    </a>
-                    <h4><a href="#">Beach club</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-
-                <!-- Item -->
-                <div class="one-fourth wow fadeIn" data-wow-delay=".6s">
-                    <a href="#" class="circle large border">
-                        <span class="icojam_airdrop"></span>
-                    </a>
-                    <h4><a href="#">Flotilla sailing</a></h4>
-                    <p>Lorem ipsum dolor sit amet, sectetuer adipiscing elit, sed diam nonumy nib.</p>
-                </div>
-                <!-- //Item -->
-            </div>
-        </div>
-    </section>-->
-    <!-- //Services -->
 
     <!-- Call to action -->
     <?php if( uf ( 'bar_cta_text', '', false ) ||  uf ( 'bar_cta_button_text', '', false ) ) : ?>
