@@ -69,7 +69,7 @@
                             <div class="details">
                                 <div>
                                     <span class="icojam_location_1"></span>
-                                    <p>Base: Marina Kaštela</p>
+                                    <p>Base: Marina Kastela</p>
                                 </div>
                                 <div>
                                     <span class="icojam_friends"></span>
@@ -455,5 +455,28 @@
     <!-- //Yachts -->
 </main>
 <!-- //Main -->
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery("#lightSliderPosts").lightSlider({
+            item:1,
+            keyPress:true,
+            gallery:false,
+            pager:false,
+            prevHtml: 'PREVIOUS',
+            nextHtml: 'NEXT'
+        });
+
+        jQuery("#lightSliderDeals").lightSlider({
+            item:1,
+            keyPress:true,
+            gallery:false,
+            pager:false,
+            prevHtml: 'PREVIOUS',
+            nextHtml: 'NEXT'
+        });
+
+        new WOW().init();
+    });
+</script>
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>

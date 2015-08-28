@@ -1,28 +1,6 @@
 (function($){
 
 	"use strict";
-
-	$(document).ready(function() {
-		$("#lightSliderPosts").lightSlider({
-			item:1,
-			keyPress:true,
-			gallery:false,
-			pager:false,
-			prevHtml: 'PREVIOUS',
-			nextHtml: 'NEXT'
-		});
-
-		$("#lightSliderDeals").lightSlider({
-			item:1,
-			keyPress:true,
-			gallery:false,
-			pager:false,
-			prevHtml: 'PREVIOUS',
-			nextHtml: 'NEXT'
-		});
-
-		new WOW().init();
-	});
 	  
 	$(document).ready(function () {
 		sailor.init();
