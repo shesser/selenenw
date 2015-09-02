@@ -113,12 +113,24 @@ function selenenw_post_thumbnail() {
 // Add specific CSS class by filter
 add_filter( 'body_class', 'my_class_names' );
 function my_class_names( $classes ) {
-
     // Applying blog class on <body> is throwing off
     // the template. So we have removed the blog class
     if ( $classes[0] == 'blog' )
         unset( $classes[0] );
+    else if ( $classes[3] == 'page-template-yacht-listing-template' )
+        $classes[] = 'sales';
 
     // return the $classes array
     return $classes;
+}
+
+function get_yacht_listing () {
+    $curl = curl_init();
+    curl_setopt ($curl, CURLOPT_URL, "http://www.yachtworld.com/privatelabel/listing/cache/pl_search_results.jsp?slim=pp289556&cit=true&sm=3&is=false&man=Selene&fromLength=&toLength=&luom=126&fromYear=&toYear=&fromPrice=&toPrice=&currencyid=100&hmid=&ftid=&enid=&city=&spid=&rid=&cint=&msint=&ps=100&ErrorMessage=Please%20check%20one%20or%20more%20boats.");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    $result = curl_exec ($curl);
+    curl_close ($curl);
+
+    return $result;
 }
