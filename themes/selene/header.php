@@ -22,7 +22,7 @@
 </head>
 <body <?php body_class(); ?>>
 <!-- Preloader -->
-<div class="preloader">
+<div class="preloader" id="page-load">
     <div>
         <span></span>
         <span></span>

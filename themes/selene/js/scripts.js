@@ -218,7 +218,7 @@
 			$('.heightfix').height(maxHeight);	
 
 			// PRELOADER
-			$('.preloader').fadeOut();
+			$('#page-load').fadeOut();
 		}
 	}
 

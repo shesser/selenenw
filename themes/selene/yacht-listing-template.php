@@ -1,24 +1,6 @@
 <?php /* Template Name: Yacht Listing */ ?>
 <?php get_header(); ?>
 
-<?php
-$html = get_yacht_listing() ;
-
-if ( $html ) {
-    $doc = new DOMDocument();
-    $doc->preserveWhiteSpace = true;
-    //$doc->loadHTMLFile( 'C:\xampp\htdocs\selene\wp-content\themes\selene\listing.html' );
-
-    @$doc->loadHTML( $html );
-    //echo $doc->getElementsByTagName('form')->item(0)->getNodePath(); die;
-    $xpath = new DOMXpath( $doc );
-    //echo $xpath->document->getElementsByTagName('form')->item(0)->getNodePath(); die;
-    $rows = $xpath->query( '/html/body/table/tr/td/table/tr[3]/td/form/table/tr[2]/td/table/tr');
-    //echo $rows->item(0)->getNodePath();
-    //die;
-}
-?>
-
 <main class="main" role="main">
     <!-- FullWidth -->
     <aside class="full-width sidebar sidebar-top fixed" style="display: none;">
@@ -94,40 +76,18 @@ if ( $html ) {
 
     <a class="filter-show" title="Show search filters" href="javascript:void(0)">+</a>
 
+    <div class="preloader" id="yacht-listing-load">
+        <div>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
     <!-- Results -->
     <div class="results offset" style="margin-top: 0;">
-        <?php foreach ( $rows as $key => $value ) {
-            if( $key == 0 ) //Skipping the first row because it contains headers
-                continue;
-            $name_node = $xpath->query( 'td', $value )->item( 4 );
-            parse_str( substr( html_entity_decode( $xpath->query( 'a', $name_node )->item( 0 )->getAttribute( 'href' ) ), 49 ), $yacht_parameters );
 
-            $name = str_replace(array("\xC2", "\xA0"), '', trim($name_node->nodeValue));
-            $length = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(3)->nodeValue));
-            $built = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(5)->nodeValue));
-            $price = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(6)->nodeValue));
-            //$url = get_permalink() . sanitize_title( $name ) . '/' . $yacht_parameters[ 'boat_id' ] . '/' . $yacht_parameters[ 'slim' ];
-            $url = get_permalink() . '#' . sanitize_title( $name );
-
-            ?>
-            <!-- Item -->
-            <figure class="one-fourth item">
-                <img src="<?php echo $yacht_parameters[ 'primary_photo_url' ]; ?>" alt="" />
-                <figcaption>
-                    <dl>
-                        <dt><?php echo $name; ?></dt>
-                        <dd>Built: <?php echo $built; ?></dd>
-                        <dd>Length: <?php echo $length; ?></dd>
-                    </dl>
-                    <div class="price">Asking price  <strong><?php echo $price; ?>$</strong></div>
-                    <a href="<?php echo $url; ?>" title="" class="button small gold">Read more</a>
-                </figcaption>
-            </figure>
-            <!-- //Item -->
-        <?php
-        if($key > 7)
-            break;
-        } ?>
     </div>
     <!-- //Results -->
 </main>
