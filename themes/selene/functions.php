@@ -306,18 +306,44 @@ add_action( 'wp_ajax_nopriv_selenenw_get_yacht_listing', 'selenenw_get_yacht_lis
 function selenenw_get_yacht_listing_form_callback() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
+    if( $_POST['built'] != '0' ) {
+        $condition = ' WHERE ';
+
+        switch ( $_POST['built'] ) {
+            case 'less-5':
+                $condition .= 'built > ' . (date('Y') - 5);
+                break;
+            case 'greater-5':
+                $condition .= 'built < ' . (date('Y') - 5);
+                break;
+        }
+    }
+
+    if( $_POST['sort'] != '0' ) {
+        $order = ' ORDER BY ';
+
+        switch ( $_POST['sort'] ) {
+            case 'price-asc':
+                $order .= 'price ASC';
+                break;
+            case 'price-desc':
+                $order .= 'price DESC';
+                break;
+        }
+    }
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts" . $condition . $order;
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
-        $url = get_permalink() . '#' . sanitize_title($yacht->name) . '-' . $yacht->id;
+        $url = get_permalink() . '#' . sanitize_title( $yacht->name ) . '-' . $yacht->id;
 
         $response[] = array(
             'id' => $yacht->id,
             'name' => $yacht->name,
             'built' => $yacht->built,
             'length' => $yacht->length,
-            'price' => $yacht->price,
+            'price' => number_format_i18n( $yacht->price ),
             'primary_image' => $yacht->primary_image,
             'url' => $url,
         );

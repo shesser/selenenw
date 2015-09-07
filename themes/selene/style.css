@@ -265,7 +265,7 @@ table td:first-child 	{background:#eee;color:#444;}
 .filter-hide								{float:right;padding:0 15px;color:#CAB08A;font-weight:400 !important;}
 .filter-show								{position:fixed;top:15px;right:15px;width:50px;height:50px;z-index:99999;background:#2B3A42;color:#fff;text-align:center;float:left;font-size:37px;text-align:center;}
 
-.offset						{margin-top:197px;}
+.offset						{margin-top:165px;}
 .results 	 				{float:left;width:100%;}
 .results figure 				{padding:0;position:relative;-webkit-transition:all 0.2s ease-in;-moz-transition:all 0.2s ease-in;-o-transition:all 0.2s ease-in;-ms-transition:all 0.2s ease-in;transition:all 0.2s ease-in;}
 .results figure *				{position:relative;z-index:2;-webkit-transition:all 0.2s ease-in;-moz-transition:all 0.2s ease-in;-o-transition:all 0.2s ease-in;-ms-transition:all 0.2s ease-in;transition:all 0.2s ease-in;}
@@ -940,8 +940,17 @@ div.radio input 						{opacity: 0;filter: alpha(opacity=0);-moz-opacity: 0;borde
 
 
 /* 31 RESPONSIVENESS */
+@media screen and (min-width: 2141px) {
+	.results .one-fourth,
+	.gallery .one-fourth {width:20%;}
+}
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 2140px) {
+	.results .one-fourth,
+	.gallery .one-fourth {width:25%;}
+}
+
+@media screen and (max-width: 1540px) {
     .results .one-fourth,
     .gallery .one-fourth {width:33.3334%;}
 }

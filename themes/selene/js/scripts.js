@@ -60,7 +60,7 @@
 		init: function () {
 			
 			//SEARCH FILTER
-			//$('.filter-show').hide(500);
+			$('.filter-show').hide(500);
 
 			$('.filter-hide').on('click', function () {
 			   $('aside.fixed').slideUp(500);
@@ -71,7 +71,7 @@
 			$('.filter-show').on('click', function () {
 			   $('aside.fixed').slideDown(500);
 			   $('.filter-show').hide(500);
-			   $('.offset').css('margin-top','197px');
+			   $('.offset').css('margin-top','165px');
 			});
 			
 			

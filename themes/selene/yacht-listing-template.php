@@ -3,65 +3,32 @@
 
 <main class="main" role="main">
     <!-- FullWidth -->
-    <aside class="full-width sidebar sidebar-top fixed" style="display: none;">
+    <aside class="full-width sidebar sidebar-top fixed">
         <!-- Refine search results -->
         <div class="search-filter">
             <div class="wrap">
                 <!-- Column -->
-                <div class="one-fourth">
-                    <p>Yacht type</p>
-                    <div class="checkbox">
-                        <input type="checkbox" id="ch1" />
-                        <label for="ch1">Motor</label>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="ch2" />
-                        <label for="ch2">Sailing</label>
-                    </div>
-                </div>
-                <!-- //Column -->
-
-                <!-- Column -->
-                <div class="one-fourth">
+                <div class="one-half">
                     <p>Year built</p>
                     <div class="checkbox">
-                        <input type="checkbox" id="ch3" />
+                        <input type="checkbox" id="ch3" value="less-5" name="year-filter"/>
                         <label for="ch3">Less than 5 years ago</label>
                     </div>
                     <div class="checkbox">
-                        <input type="checkbox" id="ch4" />
+                        <input type="checkbox" id="ch4" value="greater-5" name="year-filter" />
                         <label for="ch4">More than 5 years ago</label>
                     </div>
                 </div>
-                <!-- //Column -->
+                <!-- //Column --
 
                 <!-- Column -->
-                <div class="one-fourth">
-                    <p>Berths</p>
-                    <div class="checkbox">
-                        <input type="checkbox" id="ch5" />
-                        <label for="ch5">3 or less</label>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="ch6" />
-                        <label for="ch6">4-6</label>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="ch7" />
-                        <label for="ch7">6 or more</label>
-                    </div>
-                </div>
-                <!-- //Column -->
-
-                <!-- Column -->
-                <div class="one-fourth">
+                <div class="one-half">
                     <p>Sort by</p>
                     <div>
-                        <select>
-                            <option selected>Price - ascending</option>
-                            <option>Price - decending</option>
-                            <option>Popularity</option>
-                            <option>Date</option>
+                        <select name="sort-filter" id="sort-filter">
+                            <option selected="selected" value="0">- Select -</option>
+                            <option value="price-asc">Price - ascending</option>
+                            <option value="price-desc">Price - decending</option>
                         </select>
                     </div>
                 </div>
@@ -76,7 +43,7 @@
 
     <a class="filter-show" title="Show search filters" href="javascript:void(0)">+</a>
 
-    <div class="preloader" id="yacht-listing-load">
+    <div class="preloader" id="yacht-listing-load" style="display: none;">
         <div>
             <span></span>
             <span></span>
@@ -86,7 +53,7 @@
         </div>
     </div>
     <!-- Results -->
-    <div class="results offset" style="margin-top: 0;">
+    <div class="results offset">
 
     </div>
     <!-- //Results -->
