@@ -80,12 +80,8 @@ function selenenw_scripts() {
     wp_enqueue_script( 'selenene-custom-js', get_template_directory_uri() . '/js/custom.js', array( 'jquery' ), '20150814', true );
     wp_localize_script( 'selenene-custom-js', 'selenenw_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'site_url' => site_url() ) );
 }
-add_action( 'wp_enqueue_scripts', 'selenenw_scripts' );
 
-function number_to_words ( $number ) {
-    $number_in_words = array( 'one', 'two', 'three', 'four' );
-    return $number_in_words[ $number - 1 ];
-}
+add_action( 'wp_enqueue_scripts', 'selenenw_scripts' );
 
 function selenenw_post_thumbnail() {
     if ( post_password_required() || is_attachment() || ! has_post_thumbnail() ) {
@@ -113,8 +109,7 @@ function selenenw_post_thumbnail() {
 }
 
 // Add specific CSS class by filter
-add_filter( 'body_class', 'my_class_names' );
-function my_class_names( $classes ) {
+function selenenw_class_names( $classes ) {
     // Applying blog class on <body> is throwing off
     // the template. So we have removed the blog class
     if ( $classes[0] == 'blog' )
@@ -124,6 +119,28 @@ function my_class_names( $classes ) {
 
     // return the $classes array
     return $classes;
+}
+
+add_filter( 'body_class', 'selenenw_class_names' );
+
+function add_query_vars($vars) {
+    $vars[] = "id";
+    return $vars;
+}
+
+add_filter('query_vars', 'add_query_vars');
+
+function add_rewrite_rules($rules) {
+    $new_rule = array('yacht/([^/]+)/?$' => 'index.php?pagename=yacht&id=$matches[1]');
+    $rules = $new_rule + $rules;
+    return $rules;
+}
+
+add_filter('rewrite_rules_array', 'add_rewrite_rules');
+
+function number_to_words ( $number ) {
+    $number_in_words = array( 'one', 'two', 'three', 'four' );
+    return $number_in_words[ $number - 1 ];
 }
 
 if (!function_exists('write_log')) {
@@ -138,9 +155,9 @@ if (!function_exists('write_log')) {
     }
 }
 
-function get_yacht_listing () {
+function selenenw_get_page ( $url ) {
     $curl = curl_init();
-    curl_setopt ($curl, CURLOPT_URL, "http://www.yachtworld.com/privatelabel/listing/cache/pl_search_results.jsp?slim=pp289556&cit=true&sm=3&is=false&man=Selene&fromLength=&toLength=&luom=126&fromYear=&toYear=&fromPrice=&toPrice=&currencyid=100&hmid=&ftid=&enid=&city=&spid=&rid=&cint=&msint=&ps=100&ErrorMessage=Please%20check%20one%20or%20more%20boats.");
+    curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
     $result = curl_exec ($curl);
@@ -150,7 +167,7 @@ function get_yacht_listing () {
 }
 
 function save_yacht_listing() {
-    $html = get_yacht_listing();
+    $html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/cache/pl_search_results.jsp?slim=pp289556&cit=true&sm=3&is=false&man=Selene&fromLength=&toLength=&luom=126&fromYear=&toYear=&fromPrice=&toPrice=&currencyid=100&hmid=&ftid=&enid=&city=&spid=&rid=&cint=&msint=&ps=100&ErrorMessage=Please%20check%20one%20or%20more%20boats.');
 
     if ( $html ) {
         write_log('Success: Fetched listings from yachtworld');
@@ -190,6 +207,7 @@ function save_yacht_listing() {
                     write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
                 } else {
                     write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
+                    $primary_image = 0;
                 }
 
                 $yacht_data = array(
@@ -201,17 +219,10 @@ function save_yacht_listing() {
                     'codes' => $codes,
                     'location' => $location,
                     'primary_image' => $primary_image,
-                    /*'image' => '',
-                    'hull_material' => '',
-                    'engine_fuel_type' => '',
-                    'yw_number' => '',
-                    'courtesy' => '',
-                    'description' => '',
-                    'full_specs' => '',*/
                     'slim' => $yacht_parameters[ 'slim' ],
                 );
 
-                if ( $wpdb->insert( 'wp_yachts', $yacht_data ) ) {
+                if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
                     $insert_success_log[] = 'Success: Inserted yacht '. $yacht_parameters[ 'boat_id' ];
                 } else {
                     $insert_failure_log[] = 'Failure: Insert failed on yacht '. $yacht_parameters[ 'boat_id' ];
@@ -234,7 +245,72 @@ function save_yacht_listing() {
         write_log('Failure: Unable to fetch listings from yachtworld');
     }
 }
-add_action ('fetch_yachtworld_listing', 'save_yacht_listing()');
+//add_action ('fetch_yachtworld_listing', 'save_yacht_listing()');
+
+function fetch_yachtworld_detail() {
+    global $wpdb;
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE id IN ('2644517')";
+    $yachts = $wpdb->get_results( $query );
+
+    foreach ( $yachts as $yacht ) {
+        write_log('Fetching details for ' . $yacht->id . ' from yachtworld');
+        write_log('///////////////////////////////////////////////////////');
+
+        $html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_detail.jsp?currency=USD&units=Feet&id=' . $yacht->id . '&lang=en&slim=' . $yacht->slim . '&');
+
+        if ( $html ) {
+            write_log('Success: Fetched details page from yachtworld');
+
+            $doc = new DOMDocument();
+            $doc->preserveWhiteSpace = true;
+
+            @$doc->loadHTML( $html );
+            $xpath = new DOMXpath( $doc );
+
+            $title = $xpath->document->getElementsByTagName('h3')->item(0)->nodeValue;
+
+            $lis = $xpath->query('/html/body/td[2]/ul/li');
+            $highlights = '';
+            foreach ( $lis as $li ) {
+                $highlights .= trim( $li->nodeValue ) . '<br/>';
+            }
+
+            $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
+
+            $full_spec_html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&units=Feet&currency=USD&access=Public&listing_id=&url=');
+
+            if ( $full_spec_html ) {
+                write_log('Success: Fetched full specs from yachtworld');
+
+                @$doc->loadHTML( $full_spec_html );
+                $xpath = new DOMXpath( $doc );
+
+                $full_specs = trim( str_replace( array('<td>', '</td>'), '', $doc->saveHTML( $xpath->query('/html/body/div[3]/table/tbody/tr/td')->item(0) ) ) );
+
+                $yacht_data = array(
+                    'title' => $title,
+                    'highlights' => $highlights,
+                    'description' => $description,
+                    'full_specs' => $full_specs,
+                );
+
+                var_dump($yacht_data);
+
+                if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
+                    write_log('Success: Updated details in DB');
+                } else {
+                    write_log('Failure: Unable to update DB');
+                }
+            } else {
+                write_log('Failure: Unable to fetch full specs from yachtworld');
+            }
+        } else {
+            write_log('Failure: Unable to fetch details page for ' . $yacht->id . 'from yachtworld');
+        }
+        write_log('///////////////////////////////////////////////////////');
+    }
+}
 
 /*function cronstarter_activation() {
     if( !wp_next_scheduled( 'fetch_yachtworld_listing' ) ) {
@@ -336,7 +412,7 @@ function selenenw_get_yacht_listing_form_callback() {
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
-        $url = get_permalink() . '#' . sanitize_title( $yacht->name ) . '-' . $yacht->id;
+        $url = get_permalink( get_page_by_path( 'yacht' ) ) . sanitize_title( $yacht->name ) . '-' . $yacht->id . '/';
 
         $response[] = array(
             'id' => $yacht->id,
