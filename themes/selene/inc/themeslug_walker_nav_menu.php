@@ -2,7 +2,7 @@
 class themeslug_walker_nav_menu extends Walker_Nav_Menu {
 
     // add classes to ul sub-menus
-    function start_lvl( &$output, $depth ) {
+    function start_lvl( &$output, $depth = 0, $args = array() ) {
         $indent = ( $depth > 0  ? str_repeat( "\t", $depth ) : '' ); // code indent
         $classes = array('sub-menu');
 

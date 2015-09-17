@@ -60,6 +60,7 @@ function selenenw_scripts() {
     wp_enqueue_style( 'selenenw-fonts', get_template_directory_uri() . '/css/fonts.css', array(), '20150814');
     wp_enqueue_style( 'selene-lightslider', get_template_directory_uri() . '/css/lightSlider.min.css', array(), '20150814' );
     wp_enqueue_style( 'selenenw-animate', get_template_directory_uri() . '/css/animate.css', array(), '20150814' );
+    wp_enqueue_style( 'selenenw-lightgallery', get_template_directory_uri() . '/css/lightGallery.min.css', array(), '20150814' );
 
     // Load google fonts
     wp_enqueue_style( 'selenenw-google-font', 'http://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Raleway:400,500,600,700&amp;subset=latin,greek,cyrillic,vietnamese' );
@@ -77,6 +78,7 @@ function selenenw_scripts() {
     wp_enqueue_script( 'selenenw-lightslider', get_template_directory_uri() . '/js/jquery.lightSlider.min.js', array( 'jquery', 'jquery-ui-core' ), '20150814', true );
     wp_enqueue_script( 'selenenw-wow', get_template_directory_uri() . '/js/wow.min.js', array( 'jquery', 'jquery-ui-core' ), '20150814', true );
     wp_enqueue_script( 'selenenw-scripts', get_template_directory_uri() . '/js/scripts.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ), '20150814', true );
+    wp_enqueue_script( 'selenenw-lightgallery', get_template_directory_uri() . '/js/lightGallery.min.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ), '20150814', true );
     wp_enqueue_script( 'selenene-custom-js', get_template_directory_uri() . '/js/custom.js', array( 'jquery' ), '20150814', true );
     wp_localize_script( 'selenene-custom-js', 'selenenw_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'site_url' => site_url() ) );
 }
@@ -250,7 +252,7 @@ function save_yacht_listing() {
 function fetch_yachtworld_detail() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE id IN ('2644517')";
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
@@ -286,16 +288,68 @@ function fetch_yachtworld_detail() {
                 @$doc->loadHTML( $full_spec_html );
                 $xpath = new DOMXpath( $doc );
 
-                $full_specs = trim( str_replace( array('<td>', '</td>'), '', $doc->saveHTML( $xpath->query('/html/body/div[3]/table/tbody/tr/td')->item(0) ) ) );
+                //$full_specs = trim( str_replace( array('<td>', '</td>'), '', $doc->saveHTML( $xpath->query('/html/body/div[3]/table/tbody/tr/td')->item(0) ) ) );
+
+                $full_specs = $xpath->query('/html/body/div[3]/table/tbody/tr/td/strong');
+                $full_specs_data = array();
+
+                foreach ( $full_specs as $specs ) {
+                    $next_sibling = $specs->nextSibling;
+
+                    while( !is_null( $next_sibling ) && $next_sibling->nodeName != 'strong' ) {
+                        if( $next_sibling->nodeName == '#text' && $next_sibling->nodeValue != '' ) {
+                            $tmp = explode( ':', $next_sibling->nodeValue );
+                            if( count( $tmp ) > 1 && end ( $tmp ) != '' ) {
+                                $full_specs_data[$specs->nodeValue][] = array_map( 'trim', $tmp );
+                            } else {
+                                $full_specs_data[trim( $specs->nodeValue )][] = trim( $tmp[0] );
+                            }
+                        }
+
+                        $next_sibling = $next_sibling->nextSibling;
+                    }
+                }
+
+                $i = 4;
+                $terminate = false;
+                $features_data = array();
+                do {
+                    $features = $xpath->query('/html/body/div[' . $i . ']/table/tr/td/b');
+
+                    if( $features->length > 0 && $features->item(0)->nodeValue != 'Disclaimer' && $features->item(0)->nodeValue != 'Default Disclaimer') {
+                        $next_sibling = $features->item(0)->nextSibling;
+
+                        while( !is_null( $next_sibling ) ) {
+
+                            if( $next_sibling->hasChildNodes() ) {
+                                foreach ( $next_sibling->childNodes as $child_node ) {
+                                    $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $child_node->nodeValue ) );
+                                    if( $node_value != '' ) {
+                                        $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                    }
+                                }
+                            } else {
+                                $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $next_sibling->nodeValue ) );
+                                if( $node_value != '' ) {
+                                    $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                }
+                            }
+
+                            $next_sibling = $next_sibling->nextSibling;
+                        }
+                        $i++;
+                    } else {
+                        $terminate = true;
+                    }
+                } while( !$terminate );
 
                 $yacht_data = array(
-                    'title' => $title,
+                    /*'title' => $title,
                     'highlights' => $highlights,
-                    'description' => $description,
-                    'full_specs' => $full_specs,
+                    'description' => $description,*/
+                    'full_specs' => json_encode($full_specs_data),
+                    'features' => json_encode( $features_data ),
                 );
-
-                var_dump($yacht_data);
 
                 if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
                     write_log('Success: Updated details in DB');
@@ -308,6 +362,65 @@ function fetch_yachtworld_detail() {
         } else {
             write_log('Failure: Unable to fetch details page for ' . $yacht->id . 'from yachtworld');
         }
+        write_log('///////////////////////////////////////////////////////');
+    }
+}
+
+function fetch_yachtworld_images() {
+    global $wpdb;
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE images IS NULL";
+    $yachts = $wpdb->get_results( $query );
+
+    foreach ( $yachts as $yacht ) {
+        write_log('Fetching images for ' . $yacht->id . ' from yachtworld');
+        write_log('///////////////////////////////////////////////////////');
+        $html = selenenw_get_page( 'http://www.yachtworld.com/privatelabel/listing/photo_gallery.jsp?slim=' . $yacht->slim . '&lang=en&currency=USD&units=Feet&id=' . $yacht->id . '&back=/privatelabel/listing/pl_boat_detail.jsp&boat_id=' . $yacht->id) ;
+
+        if ( $html ) {
+            write_log('Success: Fetched photo gallery from yachtworld');
+
+            $doc = new DOMDocument();
+            $doc->preserveWhiteSpace = true;
+
+            @$doc->loadHTML($html);
+            $xpath = new DOMXpath($doc);
+
+            $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
+            $images = array();
+
+            foreach ( $columns as $column ) {
+                $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
+                $image = substr( $image, 0, strpos( $image, '?f=' ) );
+                $result = get_yacht_image( $image );
+                sleep( rand ( 1, 3 ) ); //Just a contingency to not get blacklisted
+
+                if ( ! is_wp_error( $result ) ) {
+                    write_log( 'Success: Downloaded ' . $image );
+                    $images[] = array(
+                        'original' => str_replace( '640x465_', '', $result),
+                        'resized' => $result,
+                    );
+                } else {
+                    write_log( array('Failure: Unable to download' . $image, $result) );
+                }
+            }
+
+            if ( !empty( $images ) ) {
+                $yacht_data = array(
+                    'images' => json_encode( $images ),
+                );
+
+                if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
+                    write_log('Success: Updated details in DB');
+                } else {
+                    write_log('Failure: Unable to update DB');
+                }
+            } else {
+                write_log('Failure: Images array is empty');
+            }
+        }
+
         write_log('///////////////////////////////////////////////////////');
     }
 }
@@ -359,7 +472,8 @@ function get_yacht_image ( $file ) {
 
         if ( ! is_wp_error( $image ) ) {
             $image->resize( 640, 465, true );
-            $file_name = end( explode( '/', $file[ 'file' ] ) );
+            $tmp = explode( '/', $file[ 'file' ] );
+            $file_name = end( $tmp );
             $resized_path = str_replace( $file_name, '640x465_' . $file_name, $file[ 'file' ] );
             $resized = $image->save( $resized_path );
 
