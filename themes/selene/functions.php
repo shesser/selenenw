@@ -345,9 +345,9 @@ function fetch_yachtworld_detail() {
                 } while( !$terminate );
 
                 $yacht_data = array(
-                    /*'title' => $title,
+                    'title' => $title,
                     'highlights' => $highlights,
-                    'description' => $description,*/
+                    'description' => $description,
                     'full_specs' => json_encode($full_specs_data),
                     'features' => json_encode( $features_data ),
                 );
