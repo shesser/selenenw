@@ -5,6 +5,7 @@ jQuery(document).ready(function () {
     function loadYachts () {
         jQuery('#yacht-listing-load').show();
 
+        var listing = (typeof jQuery('[name="listing-filter"]:checked').val() != 'undefined') ? jQuery('[name="listing-filter"]:checked').val() : 0;
         var built = (typeof jQuery('[name="year-filter"]:checked').val() != 'undefined') ? jQuery('[name="year-filter"]:checked').val() : 0;
         var sort = (typeof jQuery('#sort-filter').val() != 'undefined') ? jQuery('#sort-filter').val() : 0;
 
@@ -12,6 +13,7 @@ jQuery(document).ready(function () {
             selenenw_ajax.ajax_url,
             {
                 action: 'selenenw_get_yacht_listing',
+                listing: listing,
                 built: built,
                 sort: sort,
             }, function(data) {
@@ -20,7 +22,7 @@ jQuery(document).ready(function () {
                 jQuery.each(data, function(i, v) {
                     listing += '<!-- Item -->' +
                         '<figure class="one-fourth item">' +
-                        '<img src="' + v.primary_image + '" alt="" />' +
+                        '<img src="' + v.primary_image + '" alt="' + v.name + '" />' +
                         '<figcaption>' +
                         '<dl>' +
                         '<dt>' + v.name + '</dt>' +
@@ -47,6 +49,19 @@ jQuery(document).ready(function () {
         if(jQuery('[name="year-filter"]:checked').length > 1) {
             var checkedValue = jQuery(this).val();
             jQuery.each(jQuery('[name="year-filter"]'), function() {
+                if(jQuery(this).val() != checkedValue) {
+                    jQuery(this).attr('checked', false);
+                    jQuery(this).parent().removeClass('checked');
+                }
+            });
+        }
+        loadYachts ();
+    });
+
+    jQuery('[name="listing-filter"]').click(function () {
+        if(jQuery('[name="listing-filter"]:checked').length > 1) {
+            var checkedValue = jQuery(this).val();
+            jQuery.each(jQuery('[name="listing-filter"]'), function() {
                 if(jQuery(this).val() != checkedValue) {
                     jQuery(this).attr('checked', false);
                     jQuery(this).parent().removeClass('checked');

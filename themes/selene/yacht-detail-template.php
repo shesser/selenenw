@@ -10,7 +10,9 @@ if( isset( $wp_query->query_vars['id'] ) ) {
 
     $yacht = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "yachts WHERE id = '" . $id . "'" );
 
-    if ( null !== $yacht ) { ?>
+    if ( null !== $yacht ) {
+        $full_specs = json_decode( $yacht->full_specs );
+        $features = json_decode( $yacht->features ); ?>
         <!-- Main -->
         <main class="main" role="main">
             <!-- Intro -->
@@ -52,18 +54,22 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                         <li><a href="#tab1" title="Description">
                                 <span class="icojam_info_3"></span> Description
                             </a></li>
+                        <?php if ( !empty( $full_specs ) ) : ?>
                         <li><a href="#tab2" title="Specifications">
                                 <span class="icojam_document"></span> Specifications
                             </a></li>
+                        <?php endif; ?>
+                        <?php if ( !empty( $features ) ) : ?>
                         <li><a href="#tab3" title="Equipment">
                                 <span class="icojam_anchor"></span> Equipment
                             </a></li>
-                        <li><a href="#tab4" title="Contact Broker">
+                        <?php endif; ?>
+                        <!--<li><a href="#tab4" title="Contact Broker">
                                 <span class="icojam_target"></span> Contact Broker
                             </a></li>
                         <li><a href="#tab5" title="Get Brochure">
                                 <span class="icojam_inbox_receive"></span> Get Brochure
-                            </a></li>
+                            </a></li>-->
                     </ul>
                 </nav>
                 <!-- //Tab navigation -->
@@ -94,7 +100,6 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                         <div class="row">
                             <!-- OneHalf -->
                             <div class="one-half">
-                                <?php $full_specs = json_decode( $yacht->full_specs );?>
                                 <?php if ( !empty( $full_specs ) ) { ?>
                                     <?php foreach ( $full_specs as $key => $value ) {
                                         echo '<table>';
@@ -127,7 +132,6 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                         <div class="row">
                             <!-- FullWidth -->
                             <div class="full-width">
-                                <?php $features = json_decode( $yacht->features );?>
                                 <?php if ( !empty( $features ) ) { ?>
                                     <?php foreach ( $features as $key => $value ) {
                                         echo '<h3>' . $key . '</h3>';

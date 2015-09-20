@@ -160,10 +160,10 @@
 			});
 			
 			// TABS
-			$('.content .tab-content').hide().first().show();
-			$('.content .tabs li:first').addClass('current');
+			$('.page-template-yacht-detail-template .content .tab-content').hide().first().show();
+			$('.page-template-yacht-detail-template .content .tabs li:first').addClass('current');
 
-			$('.content .tabs a').on('click', function (e) {
+			$('.page-template-yacht-detail-template .content .tabs a').on('click', function (e) {
 				e.preventDefault();
 				$(this).closest('li').addClass('current').siblings().removeClass('current');
 				$($(this).attr('href')).show().siblings('.tab-content').hide();
@@ -208,10 +208,17 @@
 			// UNIFY HEIGHT
 			var maxHeight = 0;
 				
-			$('.heightfix').each(function(){
+			$('#blog-post .heightfix').each(function(){
 				if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
 			});
-			$('.heightfix').height(maxHeight);	
+			$('#blog-post .heightfix').height(maxHeight);
+
+			maxHeight = 0;
+
+			$('#featured-yacht .heightfix').each(function(){
+				if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
+			});
+			$('#featured-yacht .heightfix').height(maxHeight);
 
 			// PRELOADER
 			$('#page-load').fadeOut();

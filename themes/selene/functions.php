@@ -494,35 +494,52 @@ add_action( 'wp_ajax_nopriv_selenenw_get_yacht_listing', 'selenenw_get_yacht_lis
  * Ajax callback function that retrieves the Yacht Listing
  */
 function selenenw_get_yacht_listing_form_callback() {
+    selenenw_get_yacht_listing( true );
+}
+
+function selenenw_get_yacht_listing( $ajax, $condition_array = array(), $order = null, $limit = null ) {
     global $wpdb;
 
-    if( $_POST['built'] != '0' ) {
-        $condition = ' WHERE ';
+    if ( $ajax ) {
+        if( isset( $_POST['listing'] ) && $_POST['listing'] != '0' ) {
+            switch ( $_POST['listing'] ) {
+                case 'our-listing':
+                    $condition_array[] = 'is_selenenw = 1';
+                    break;
+                case 'other-listing':
+                    $condition_array[] = 'is_selenenw = 0';
+                    break;
+            }
+        }
 
-        switch ( $_POST['built'] ) {
-            case 'less-5':
-                $condition .= 'built > ' . (date('Y') - 5);
-                break;
-            case 'greater-5':
-                $condition .= 'built < ' . (date('Y') - 5);
-                break;
+        if( isset( $_POST['built'] ) && $_POST['built'] != '0' ) {
+            switch ( $_POST['built'] ) {
+                case 'less-5':
+                    $condition_array[] = 'built > ' . (date('Y') - 5);
+                    break;
+                case 'greater-5':
+                    $condition_array[] = 'built < ' . (date('Y') - 5);
+                    break;
+            }
+        }
+
+        if( isset( $_POST['sort'] ) && $_POST['sort'] != '0' ) {
+            switch ( $_POST['sort'] ) {
+                case 'price-asc':
+                    $order = 'price ASC';
+                    break;
+                case 'price-desc':
+                    $order = 'price DESC';
+                    break;
+            }
         }
     }
 
-    if( $_POST['sort'] != '0' ) {
-        $order = ' ORDER BY ';
+    $condition = ( !empty( $condition_array ) ) ? ' WHERE ' . implode( ' AND ', $condition_array ) : '';
+    $order = ( !empty( $order ) ) ? ' ORDER BY ' . $order : '';
+    $limit = ( !empty( $limit ) ) ? ' LIMIT 0,' . $limit : '';
 
-        switch ( $_POST['sort'] ) {
-            case 'price-asc':
-                $order .= 'price ASC';
-                break;
-            case 'price-desc':
-                $order .= 'price DESC';
-                break;
-        }
-    }
-
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts" . $condition . $order;
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts" . $condition . $order . $limit;
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
@@ -539,10 +556,38 @@ function selenenw_get_yacht_listing_form_callback() {
         );
     }
 
-    if ( !empty( $response ) )
-        echo json_encode( $response );
-    else
-        echo 0;
+    if ( $ajax ) {
+        echo ( !empty( $response ) ) ? json_encode( $response ) : 0;
+        exit;
+    } else {
+        return ( !empty( $response ) ) ? $response : false;
+    }
+}
 
-    exit;
+function selenenw_get_featured_yachts() {
+    global $wpdb;
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE is_featured = 1" ;
+    $yachts = $wpdb->get_results( $query );
+
+    foreach ( $yachts as $yacht ) {
+        $url = get_permalink( get_page_by_path( 'yacht' ) ) . sanitize_title( $yacht->name ) . '-' . $yacht->id . '/';
+
+        $response[] = array(
+            'id' => $yacht->id,
+            'name' => $yacht->name,
+            'built' => $yacht->built,
+            'length' => $yacht->length,
+            'price' => number_format_i18n( $yacht->price ),
+            'primary_image' => $yacht->primary_image,
+            'url' => $url,
+            'short_desc' => substr( strip_tags( $yacht->description ), 0, 200 ) . '...',
+            'title' => $yacht->title,
+        );
+    }
+
+    if ( !empty( $response ) )
+        return $response;
+    else
+        return false;
 }

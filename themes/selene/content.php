@@ -9,7 +9,7 @@
                 <span><?php the_date( 'M jS, Y' ); ?></span>
                 <span><a href="<?php echo the_permalink(); ?>#comments"><?php echo get_comments_number(); ?> <?php comments_number('Comment', 'Comment', 'Comments'); ?></a></span>
             </div>
-            <?php the_excerpt();;?>
+            <?php the_excerpt(); ?>
             <a href="<?php echo the_permalink(); ?>" class="more" title="Read more">Read more</a>
         </div>
     </div>

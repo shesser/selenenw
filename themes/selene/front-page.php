@@ -53,93 +53,44 @@
     <?php endif; ?>
     <!-- //Call to action -->
 
+    <?php $featured_yachts = selenenw_get_featured_yachts(); ?>
+    <?php if( $featured_yachts ) : ?>
     <!-- Deals -->
-    <section class="content boxed grid2 noarrow">
+    <section id="featured-yacht" class="content boxed grid2 noarrow">
         <ul id="lightSliderDeals">
+            <?php foreach( $featured_yachts as $yacht) : ?>
             <li>
                 <!-- Item -->
                 <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="yacht-single.html"><img src="http://placehold.it/800x600" alt="deal" /></a></figure>
+                    <figure class="one-half heightfix"><a href="<?php echo $yacht['url']; ?>"><img src="<?php echo $yacht['primary_image']; ?>" alt="deal" /></a></figure>
                     <div class="one-half heightfix">
-                        <header>Our Exclusive Deals</header>
+                        <header>Featured Yacht</header>
                         <div class="text">
-                            <h3><a href="yacht-single.html">Elan 1923 Impression</a></h3>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam aliquip ex ea commodoerat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo. Aenean commodo ligula eget dolor. Aenean massa.</p>
+                            <h3><a href="yacht-single.html"><?php echo $yacht['title']; ?></a></h3>
+                            <p><?php echo $yacht['short_desc']; ?></p>
 
                             <div class="details">
                                 <div>
                                     <span class="icojam_location_1"></span>
-                                    <p>Base: Marina Kastela</p>
+                                    <p>Length: <?php echo $yacht['length']; ?></p>
                                 </div>
                                 <div>
                                     <span class="icojam_friends"></span>
-                                    <p>Berths: 10 (8+2)</p>
+                                    <p>Built: <?php echo $yacht['built']; ?></p>
                                 </div>
-                                <div class="price">$ 5300,00</div>
-                                <div><a href="yacht-single.html" title="Book now" class="button gold full medium solid">Book now</a> </div>
+                                <div class="price">$ <?php echo $yacht['price']; ?></div>
+                                <div><a href="<?php echo $yacht['url']; ?>" title="Read More" class="button gold full medium solid">Read More</a> </div>
                             </div>
                         </div>
                     </div>
                 </article>
                 <!-- //Item -->
             </li>
-            <li>
-                <!-- Item -->
-                <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="yacht-single.html"><img src="http://placehold.it/800x600" alt="deal" /></a></figure>
-                    <div class="one-half heightfix">
-                        <header>Our Exclusive Deals</header>
-                        <div class="text">
-                            <h3><a href="yacht-single.html">Elan 1923 Impression</a></h3>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam aliquip ex ea commodoerat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo. Aenean commodo ligula eget dolor. Aenean massa.</p>
-
-                            <div class="details">
-                                <div>
-                                    <span class="icojam_location_1"></span>
-                                    <p>Base: Marina Kaštela</p>
-                                </div>
-                                <div>
-                                    <span class="icojam_friends"></span>
-                                    <p>Berths: 10 (8+2)</p>
-                                </div>
-                                <div class="price">$ 5300,00</div>
-                                <div><a href="yacht-single.html" title="Book now" class="button gold full medium solid">Book now</a> </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <!-- //Item -->
-            </li>
-            <li>
-                <!-- Item -->
-                <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="yacht-single.html"><img src="http://placehold.it/800x600" alt="deal" /></a></figure>
-                    <div class="one-half heightfix">
-                        <header>Our Exclusive Deals</header>
-                        <div class="text">
-                            <h3><a href="yacht-single.html">Elan 1923 Impression</a></h3>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam aliquip ex ea commodoerat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo. Aenean commodo ligula eget dolor. Aenean massa.</p>
-
-                            <div class="details">
-                                <div>
-                                    <span class="icojam_location_1"></span>
-                                    <p>Base: Marina Kaštela</p>
-                                </div>
-                                <div>
-                                    <span class="icojam_friends"></span>
-                                    <p>Berths: 10 (8+2)</p>
-                                </div>
-                                <div class="price">$ 5300,00</div>
-                                <div><a href="yacht-single.html" title="Book now" class="button gold full medium solid">Book now</a> </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <!-- //Item -->
-            </li>
+            <?php endforeach; ?>
         </ul>
     </section>
     <!-- //Deals -->
+    <?php endif; ?>
 
     <!-- Testimonials -->
     <section class="testimonials">
@@ -184,73 +135,36 @@
     <?php endif; ?>
     <!-- //Call to action -->
 
+    <?php $posts = get_posts( array( 'category_name' => 'featured' ) ); ?>
+    <?php if( !empty( $posts ) ) : ?>
     <!-- Blog posts -->
-    <section class="content boxed grid2">
+    <section id="blog-post" class="content boxed grid2">
         <ul id="lightSliderPosts">
+            <?php foreach( $posts as $post ) : setup_postdata( $post ); ?>
             <li>
                 <!-- Item -->
                 <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="blog-single.html"><img src="http://placehold.it/800x600" alt="post" /></a></figure>
+                    <figure class="one-half heightfix"><a href="<?php echo the_permalink(); ?>"><?php the_post_thumbnail( 'post-thumbnail', array( 'alt' => get_the_title() ) ); ?></a></figure>
                     <div class="one-half heightfix">
                         <div class="text">
-                            <h3><a href="blog-single.html">Win an All Inclusive Sailing Holiday in Mediterranean!</a></h3>
+                            <h3><a href="<?php echo the_permalink(); ?>"><?php echo the_title(); ?></a></h3>
                             <div class="meta">
-                                <span>By <a href="#">admin</a></span>
-                                <span>May 23rd, 2015</span>
-                                <span><a href="blog-single.html#comments">2 Comments</a></span>
+                                <span>By <a href="#"><?php the_author(); ?></a></span>
+                                <span><?php the_date( 'M jS, Y' ); ?></span>
+                                <span><a href="<?php echo the_permalink(); ?>#comments"><?php echo get_comments_number(); ?> <?php comments_number('Comment', 'Comment', 'Comments'); ?></a></span>
                             </div>
-                            <p>This year’s Taiwan International Boat Show was a huge success. Taken place from May 8 to 11, the event was attended by more than 70,000 visitors. With NT$1Bn in orders already placed for 32 yachts, this month’s Taiwan Int Boat Show has sailed away with all round acclaim, when it closed its doors on May 11.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in </p>
-                            <a href="blog-single.html" class="button small gold" title="Read more">Read more</a>
+                            <?php the_excerpt(); ?>
+                            <a href="<?php echo the_permalink(); ?>" class="button small gold" title="Read more">Read more</a>
                         </div>
                     </div>
                 </article>
                 <!-- //Item -->
             </li>
-            <li>
-                <!-- Item -->
-                <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="blog-single.html"><img src="http://placehold.it/800x600" alt="post" /></a></figure>
-                    <div class="one-half heightfix">
-                        <div class="text">
-                            <h3><a href="blog-single.html">Luxury Heart of Gold joins<br />our charter fleet</a></h3>
-                            <div class="meta">
-                                <span>By <a href="#">admin</a></span>
-                                <span>May 23rd, 2015</span>
-                                <span><a href="blog-single.html#comments">2 Comments</a></span>
-                            </div>
-                            <p>This year’s Taiwan International Boat Show was a huge success. Taken place from May 8 to 11, the event was attended by more than 70,000 visitors. With NT$1Bn in orders already placed for 32 yachts, this month’s Taiwan Int Boat Show has sailed away with all round acclaim, when it closed its doors on May 11.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in </p>
-                            <a href="blog-single.html" class="button small gold" title="Read more">Read more</a>
-                        </div>
-                    </div>
-                </article>
-                <!-- //Item -->
-            </li>
-
-            <li>
-                <!-- Item -->
-                <article class="full-width hentry">
-                    <figure class="one-half heightfix"><a href="blog-single.html"><img src="http://placehold.it/800x600" alt="post" /></a></figure>
-                    <div class="one-half heightfix">
-                        <div class="text">
-                            <h3><a href="blog-single.html">Sailor Awarded Outstanding Sailing School<br />and Outstanding Instructor Award</a></h3>
-                            <div class="meta">
-                                <span>By <a href="#">admin</a></span>
-                                <span>May 23rd, 2015</span>
-                                <span><a href="blog-single.html#comments">2 Comments</a></span>
-                            </div>
-                            <p>This year’s Taiwan International Boat Show was a huge success. Taken place from May 8 to 11, the event was attended by more than 70,000 visitors. With NT$1Bn in orders already placed for 32 yachts, this month’s Taiwan Int Boat Show has sailed away with all round acclaim, when it closed its doors on May 11.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in </p>
-                            <a href="blog-single.html" class="button small gold" title="Read more">Read more</a>
-                        </div>
-                    </div>
-                </article>
-                <!-- //Item -->
-            </li>
+            <?php endforeach; wp_reset_postdata(); ?>
         </ul>
     </section>
     <!-- //Blog posts -->
+    <?php endif; ?>
 
     <!-- Call to action -->
     <?php if( uf ( 'full_cta_2_title', '', false ) || uf ( 'full_cta_2_description', '', false ) ||  uf ( 'full_cta_2_button_text', '', false ) ) : ?>
@@ -270,189 +184,29 @@
     <?php endif; ?>
     <!-- //Call to action -->
 
+    <?php $recent_yachts = selenenw_get_yacht_listing( false, array( 'is_selenenw = 0' ), null, '12' ); ?>
+    <?php if( $recent_yachts ) : ?>
     <!-- Yachts -->
     <div class="results">
+        <?php foreach( $recent_yachts as $yacht ) :?>
         <!-- Item -->
         <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
+            <img src="<?php echo $yacht['primary_image']; ?>" alt="<?php echo $yacht['name']; ?>" />
             <figcaption>
                 <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
+                    <dt><?php echo $yacht['name']; ?></dt>
+                    <dd><span class="icojam_calendar"></span> <?php echo $yacht['built']; ?></dd>
+                    <dd><span class="icojam_ruler"></span> <?php echo $yacht['length']; ?></dd>
                 </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
+                <div class="price">Price <strong>$<?php echo $yacht['price']; ?></strong></div>
+                <a href="<?php echo $yacht['url']; ?>" title="Read More" class="button small gold">Read More</a>
             </figcaption>
         </figure>
         <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="http://placehold.it/800x600" alt="" />
-            <figcaption>
-                <dl>
-                    <dt>Elan 1923 Impression</dt>
-                    <dd><span class="icojam_doublebed"></span> 10 berths</dd>
-                    <dd><span class="icojam_toilet_paper"></span> 2 toilets</dd>
-                </dl>
-                <div class="price">Price from  <strong>50.000$</strong></div>
-                <a href="yacht-single.html" title="Book now" class="button small gold">Book now</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
+        <?php endforeach; ?>
     </div>
     <!-- //Yachts -->
+    <?php endif; ?>
 </main>
 <!-- //Main -->
 <script type="text/javascript">
