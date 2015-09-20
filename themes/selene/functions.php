@@ -168,7 +168,7 @@ function selenenw_get_page ( $url ) {
     return $result;
 }
 
-function save_yacht_listing( $url ) {
+function save_yacht_listing( $url, $is_selenenw = false ) {
     $html = selenenw_get_page( $url );
 
     if ( $html ) {
@@ -222,6 +222,7 @@ function save_yacht_listing( $url ) {
                     'location' => $location,
                     'primary_image' => $primary_image,
                     'slim' => $yacht_parameters[ 'slim' ],
+                    'is_selenenw' => $is_selenenw
                 );
 
                 if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
