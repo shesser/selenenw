@@ -168,8 +168,8 @@ function selenenw_get_page ( $url ) {
     return $result;
 }
 
-function save_yacht_listing() {
-    $html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/cache/pl_search_results.jsp?slim=pp289556&cit=true&sm=3&is=false&man=Selene&fromLength=&toLength=&luom=126&fromYear=&toYear=&fromPrice=&toPrice=&currencyid=100&hmid=&ftid=&enid=&city=&spid=&rid=&cint=&msint=&ps=100&ErrorMessage=Please%20check%20one%20or%20more%20boats.');
+function save_yacht_listing( $url ) {
+    $html = selenenw_get_page( $url );
 
     if ( $html ) {
         write_log('Success: Fetched listings from yachtworld');
@@ -369,13 +369,13 @@ function fetch_yachtworld_detail() {
 function fetch_yachtworld_images() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE images IS NULL";
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
         write_log('Fetching images for ' . $yacht->id . ' from yachtworld');
         write_log('///////////////////////////////////////////////////////');
-        $html = selenenw_get_page( 'http://www.yachtworld.com/privatelabel/listing/photo_gallery.jsp?slim=' . $yacht->slim . '&lang=en&currency=USD&units=Feet&id=' . $yacht->id . '&back=/privatelabel/listing/pl_boat_detail.jsp&boat_id=' . $yacht->id) ;
+        $html = selenenw_get_page( 'http://www.yachtworld.com/privatelabel/listing/photo_gallery.jsp?slim=' . $yacht->slim . '&lang=en&currency=USD&units=Feet&id=' . $yacht->id . '&back=/privatelabel/listing/pl_boat_detail.jsp&boat_id=' . $yacht->id);
 
         if ( $html ) {
             write_log('Success: Fetched photo gallery from yachtworld');
@@ -387,12 +387,19 @@ function fetch_yachtworld_images() {
             $xpath = new DOMXpath($doc);
 
             $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
+            $js = $xpath->query('/html/head/script')->item(0)->childNodes->item(0)->nodeValue;
             $images = array();
+            $i = 1;
 
             foreach ( $columns as $column ) {
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
                 $result = get_yacht_image( $image );
+
+                $pos = strpos($js, 'PicDescription[' . $i . ']');
+                $eol_pos = strpos($js, ';', $pos) - $pos;
+                $caption = str_replace( array( 'PicDescription[' . $i . '] = \'', '\'' ), '', substr($js, $pos, $eol_pos ) );
+
                 sleep( rand ( 1, 3 ) ); //Just a contingency to not get blacklisted
 
                 if ( ! is_wp_error( $result ) ) {
@@ -400,10 +407,13 @@ function fetch_yachtworld_images() {
                     $images[] = array(
                         'original' => str_replace( '640x465_', '', $result),
                         'resized' => $result,
+                        'caption' => $caption,
                     );
                 } else {
                     write_log( array('Failure: Unable to download' . $image, $result) );
                 }
+
+                $i++;
             }
 
             if ( !empty( $images ) ) {
