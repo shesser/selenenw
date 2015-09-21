@@ -465,7 +465,7 @@ function get_yacht_image ( $file ) {
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         write_log('Start Downloading: ' . $file . '...');
         $file_array['tmp_name'] = download_url( $file, 600 );
-        write_log('Completed Downloading: ' . $file . '...');
+        write_log('Completed Downloading: ' . $file . '...' . memory_get_usage() );
 
         // If error storing temporarily, return the error.
         if ( is_wp_error( $file_array['tmp_name'] ) ) {
