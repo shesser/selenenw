@@ -192,7 +192,10 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                     continue;
 
                 $name_node = $xpath->query('td', $value)->item(4);
-                parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 49), $yacht_parameters);
+                if( $is_selenenw )
+                    parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 40), $yacht_parameters);
+                else
+                    parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 49), $yacht_parameters);
 
                 //$yacht_parameters[ 'boat_id' ]
                 $name = str_replace(array("\xC2", "\xA0"), '', trim($name_node->nodeValue));
@@ -260,7 +263,10 @@ function fetch_yachtworld_detail() {
         write_log('Fetching details for ' . $yacht->id . ' from yachtworld');
         write_log('///////////////////////////////////////////////////////');
 
-        $html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_detail.jsp?currency=USD&units=Feet&id=' . $yacht->id . '&lang=en&slim=' . $yacht->slim . '&');
+        if ( $yacht->is_selenenw )
+            $html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_detail.jsp?&units=Feet&id=' . $yacht->id . '&lang=en&slim=' . $yacht->slim . '&&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
+        else
+            $html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_detail.jsp?currency=USD&units=Feet&id=' . $yacht->id . '&lang=en&slim=' . $yacht->slim . '&');
 
         if ( $html ) {
             write_log('Success: Fetched details page from yachtworld');
@@ -281,7 +287,10 @@ function fetch_yachtworld_detail() {
 
             $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
 
-            $full_spec_html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&units=Feet&currency=USD&access=Public&listing_id=&url=');
+            if( $yacht->is_selenenw )
+                $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
+            else
+                $full_spec_html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&units=Feet&currency=USD&access=Public&listing_id=&url=');
 
             if ( $full_spec_html ) {
                 write_log('Success: Fetched full specs from yachtworld');
@@ -370,13 +379,17 @@ function fetch_yachtworld_detail() {
 function fetch_yachtworld_images() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE images IS NULL";
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
         write_log('Fetching images for ' . $yacht->id . ' from yachtworld');
         write_log('///////////////////////////////////////////////////////');
-        $html = selenenw_get_page( 'http://www.yachtworld.com/privatelabel/listing/photo_gallery.jsp?slim=' . $yacht->slim . '&lang=en&currency=USD&units=Feet&id=' . $yacht->id . '&back=/privatelabel/listing/pl_boat_detail.jsp&boat_id=' . $yacht->id);
+
+        if ( $yacht->is_selenenw )
+            $html = selenenw_get_page( 'http://www.yachtworld.com/core/listing/photo_gallery.jsp?access=Public&slim=' . $yacht->slim . '&ywo=seleneyachtsnorthwest&ywo=seleneyachtsnorthwest&hosturl=seleneyachtsnorthwest&hosturl=seleneyachtsnorthwest&units=Feet&boat_id=' . $yacht->id . '&back=pl_boat_detail.jsp&boat_id=' . $yacht->id . '' );
+        else
+            $html = selenenw_get_page( 'http://www.yachtworld.com/privatelabel/listing/photo_gallery.jsp?slim=' . $yacht->slim . '&lang=en&currency=USD&units=Feet&id=' . $yacht->id . '&back=/privatelabel/listing/pl_boat_detail.jsp&boat_id=' . $yacht->id);
 
         if ( $html ) {
             write_log('Success: Fetched photo gallery from yachtworld');
