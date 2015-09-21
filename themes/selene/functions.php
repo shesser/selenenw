@@ -193,7 +193,7 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
 
                 $name_node = $xpath->query('td', $value)->item(4);
                 if( $is_selenenw )
-                    parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 40), $yacht_parameters);
+                    parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 41), $yacht_parameters);
                 else
                     parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 49), $yacht_parameters);
 
