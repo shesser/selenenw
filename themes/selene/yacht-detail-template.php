@@ -11,8 +11,16 @@ if( isset( $wp_query->query_vars['id'] ) ) {
     $yacht = $wpdb->get_row("SELECT * FROM " . $wpdb->prefix . "yachts WHERE id = '" . $id . "'" );
 
     if ( null !== $yacht ) {
+        $number_of_tabs = 2;
         $full_specs = json_decode( $yacht->full_specs );
-        $features = json_decode( $yacht->features ); ?>
+        $features = json_decode( $yacht->features );
+        if ( !empty( $full_specs ) )
+            $number_of_tabs++;
+        if ( !empty( $features ) )
+            $number_of_tabs++;
+
+        ?>
+
         <!-- Main -->
         <main class="main" role="main">
             <!-- Intro -->
@@ -49,7 +57,7 @@ if( isset( $wp_query->query_vars['id'] ) ) {
             <!-- Content -->
             <div class="content">
                 <!-- Tab navigation -->
-                <nav class="tabs five" role="navigation" id="tab-navigation">
+                <nav class="tabs <?php echo number_to_words( $number_of_tabs ); ?>" role="navigation" id="tab-navigation">
                     <ul class="wrap">
                         <li><a href="#tab1" title="Description">
                                 <span class="icojam_info_3"></span> Description
@@ -64,10 +72,10 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                                 <span class="icojam_anchor"></span> Equipment
                             </a></li>
                         <?php endif; ?>
-                        <!--<li><a href="#tab4" title="Contact Broker">
+                        <li><a href="#tab4" title="Contact Broker">
                                 <span class="icojam_target"></span> Contact Broker
                             </a></li>
-                        <li><a href="#tab5" title="Get Brochure">
+                        <!--<li><a href="#tab5" title="Get Brochure">
                                 <span class="icojam_inbox_receive"></span> Get Brochure
                             </a></li>-->
                     </ul>
@@ -154,46 +162,7 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                     <!-- Tab Content-->
                     <article class="tab-content" id="tab4">
                         <div class="row">
-                            <!-- ThreeFourth -->
-                            <div class="three-fourth">
-                                <h2>Contact the broker directly</h2>
-                                <p>Please use the form below in order to send an inqury regarding the yacht. You will be contacted by the broker within 24 hours. Lorem ipsum dolor sit amet, thank you very much.</p>
-                                <p>All fields are required.</p>
-
-                                <form class="row">
-                                    <fieldset>
-                                        <div class="one-half">
-                                            <label for="name">Name</label>
-                                            <input type="text" id="name" />
-                                        </div>
-
-                                        <div class="one-half">
-                                            <label for="surname">Surname</label>
-                                            <input type="text" id="surname" />
-                                        </div>
-
-                                        <div class="one-half">
-                                            <label for="phone">Phone</label>
-                                            <input type="number" id="phone" />
-                                        </div>
-
-                                        <div class="one-half">
-                                            <label for="email">E-mail</label>
-                                            <input type="email" id="email" />
-                                        </div>
-
-                                        <div class="full-width">
-                                            <label>Your message</label>
-                                            <textarea></textarea>
-                                        </div>
-
-                                        <div class="full-width">
-                                            <a href="#" title="Send inquiry" class="button gold large">Send inquiry</a>
-                                        </div>
-                                    </fieldset>
-                                </form>
-                            </div>
-                            <!-- //ThreeFourth -->
+                            <?php echo do_shortcode( '[contact-form-7 id="178" title="Contact Broker"]' ); ?>
 
                             <!-- OneFourth -->
                             <aside class="one-fourth sidebar sidebar-right">

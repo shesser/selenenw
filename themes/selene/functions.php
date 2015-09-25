@@ -532,9 +532,9 @@ function selenenw_get_yacht_listing( $ajax, $condition_array = array(), $order =
                 case 'our-listing':
                     $condition_array[] = 'is_selenenw = 1';
                     break;
-                case 'other-listing':
+                /*case 'other-listing':
                     $condition_array[] = 'is_selenenw = 0';
-                    break;
+                    break;*/
             }
         }
 
@@ -617,3 +617,14 @@ function selenenw_get_featured_yachts() {
     else
         return false;
 }
+
+// define the wpcf7_before_send_mail callback
+function selenenw_wpcf7_before_send_mail( $contact_form )
+{
+    if ( $contact_form->name == 'contact-broker' ) {
+        $contact_form->properties->mail->body = str_replace( '#yacht-details#', wp_get_referer(), $contact_form->properties->mail->body );
+    }
+}
+
+// add the action
+add_action( 'wpcf7_before_send_mail', 'selenenw_wpcf7_before_send_mail', 10, 1 );

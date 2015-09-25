@@ -184,7 +184,7 @@
     <?php endif; ?>
     <!-- //Call to action -->
 
-    <?php $recent_yachts = selenenw_get_yacht_listing( false, array( 'is_selenenw = 0' ), null, '12' ); ?>
+    <?php $recent_yachts = selenenw_get_yacht_listing( false, array(), 'is_selenenw DESC', '12' ); ?>
     <?php if( $recent_yachts ) : ?>
     <!-- Yachts -->
     <div class="results">

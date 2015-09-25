@@ -19,31 +19,42 @@
             </div>
             <!-- //OneFourth -->
 
+            <?php if ( has_nav_menu( 'footer' ) ) : ?>
             <!-- OneFourth -->
             <div class="one-fourth">
-                <h6>Why book with us?</h6>
-                <ul class="check">
-                    <li><a href="#">Secure booking</a></li>
-                    <li><a href="#">Best price guarantee</a></li>
-                    <li><a href="#">Passionate service</a></li>
-                    <li><a href="#">Exclusive knowledge</a></li>
-                    <li><a href="#">Benefits for partners</a></li>
-                </ul>
-            </div>
-            <!-- //OneFourth -->
+                <?php
+                $footer_second_column = 18;
+                $nav_menu = wp_get_nav_menu_object( $footer_second_column );
+                echo '<h6>' . $nav_menu->name . '</h6>';
 
-            <!-- OneFourth -->
-            <div class="one-fourth">
-                <h6>Need help?</h6>
-                <ul>
-                    <li><a href="#">Faq</a></li>
-                    <li><a href="#">How do I make a reservation?</a></li>
-                    <li><a href="#">Payment options</a></li>
-                    <li><a href="#">Privacy policy</a></li>
-                    <li><a href="#">Terms and conditions</a></li>
-                </ul>
+                wp_nav_menu( array(
+                    'menu_class'     => 'check',
+                    'menu_id'        => 'footer-second-column',
+                    'theme_location' => 'footer',
+                    'menu'         => $footer_second_column,
+                ) );
+                ?>
             </div>
             <!-- //OneFourth -->
+            <?php endif; ?>
+
+            <?php if ( has_nav_menu( 'footer' ) ) : ?>
+            <!-- OneFourth -->
+            <div class="one-fourth">
+                <?php
+                $footer_third_column = 19;
+                $nav_menu = wp_get_nav_menu_object( $footer_third_column );
+                echo '<h6>' . $nav_menu->name . '</h6>';
+
+                wp_nav_menu( array(
+                    'menu_id'        => 'footer-third-column',
+                    'theme_location' => 'footer',
+                    'menu'         => $footer_third_column,
+                ) );
+                ?>
+            </div>
+            <!-- //OneFourth -->
+            <?php endif; ?>
 
             <!-- OneFourth -->
             <div class="one-fourth">

@@ -12,11 +12,11 @@
                     <p>Listing Type</p>
                     <div class="checkbox">
                         <input type="checkbox" id="ch1" value="our-listing" name="listing-filter" checked="checked"/>
-                        <label for="ch3">Our Listing</label>
+                        <label for="ch3">Our Listings</label>
                     </div>
                     <div class="checkbox">
                         <input type="checkbox" id="ch2" value="other-listing" name="listing-filter" />
-                        <label for="ch4">Other Dealers</label>
+                        <label for="ch4">All Selene Listings</label>
                     </div>
                 </div>
                 <!-- //Column -->
