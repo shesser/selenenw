@@ -162,7 +162,14 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                     <!-- Tab Content-->
                     <article class="tab-content" id="tab4">
                         <div class="row">
-                            <?php echo do_shortcode( '[contact-form-7 id="178" title="Contact Broker"]' ); ?>
+                            <!-- ThreeFourth -->
+                            <div class="three-fourth">
+                                <h2>Contact the broker directly</h2>
+                                <p>Please use the form below in order to send an inqury regarding the yacht. You will be contacted by the broker within 24 hours. Lorem ipsum dolor sit amet, thank you very much.</p>
+                                <p>All fields are required.</p>
+                                <?php echo do_shortcode( '[contact-form-7 id="178" title="Contact Broker"]' ); ?>
+                            </div>
+                            <!-- //ThreeFourth -->
 
                             <!-- OneFourth -->
                             <aside class="one-fourth sidebar sidebar-right">
