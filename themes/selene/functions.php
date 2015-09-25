@@ -622,7 +622,9 @@ function selenenw_get_featured_yachts() {
 function selenenw_wpcf7_before_send_mail( $contact_form )
 {
     if ( $contact_form->name == 'contact-broker' ) {
-        $contact_form->properties->mail->body = str_replace( '#yacht-details#', wp_get_referer(), $contact_form->properties->mail->body );
+        $mail = $contact_form->prop( 'mail' );
+        $mail['body'] = str_replace( '#yacht-details#', wp_get_referer(), $mail['body'] );
+        $contact_form->set_properties( array( 'mail' => $mail ) );
     }
 }
 
