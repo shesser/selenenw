@@ -621,7 +621,7 @@ function selenenw_get_featured_yachts() {
 // define the wpcf7_before_send_mail callback
 function selenenw_wpcf7_before_send_mail( $contact_form )
 {
-    if ( $contact_form->name == 'contact-broker' ) {
+    if ( $contact_form->name() == 'contact-broker' ) {
         $mail = $contact_form->prop( 'mail' );
         $mail['body'] = str_replace( '#yacht-details#', wp_get_referer(), $mail['body'] );
         $contact_form->set_properties( array( 'mail' => $mail ) );
