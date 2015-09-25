@@ -174,18 +174,7 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                             <!-- OneFourth -->
                             <aside class="one-fourth sidebar sidebar-right">
                                 <div class="widget">
-                                    <img src="http://placehold.it/300x300" alt="broker image" />
-                                </div>
-
-                                <div class="widget">
-                                    <div class="tooltip bottom">
-                                        <blockquote>Excellent - you found the right boat in the right place at the right time and managed to change the dates for our convenience - brilliant!</blockquote>
-                                    </div>
-                                    <div class="vcard">
-                                        <div class="avatar"><img src="http://placehold.it/160x160" alt="avatar" /></div>
-                                        <span class="name">Johnatan S. Davidson</span>
-                                        <span class="date">June 13, 2014</span>
-                                    </div>
+                                    <img src="<?php echo $yacht->primary_image; ?>"" alt="<?php echo $yacht->title; ?>"" />
                                 </div>
                             </aside>
                             <!-- //OneFourth -->

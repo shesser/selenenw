@@ -630,3 +630,16 @@ function selenenw_wpcf7_before_send_mail( $contact_form )
 
 // add the action
 add_action( 'wpcf7_before_send_mail', 'selenenw_wpcf7_before_send_mail', 10, 1 );
+
+// define the wpcf7_form_class_attr callback
+function filter_wpcf7_form_class_attr( $class )
+{
+    global $wp_query;
+    if( isset( $wp_query->query_vars['id'] ) )
+        $class .= ' row';
+
+    return $class;
+};
+
+// add the filter
+add_filter( 'wpcf7_form_class_attr', 'filter_wpcf7_form_class_attr', 10, 1 );
