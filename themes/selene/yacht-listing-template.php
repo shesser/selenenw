@@ -72,7 +72,9 @@
 </main>
 
 <script type="text/javascript">
-loadYachts();
+    jQuery(document).ready(function () {
+        loadYachts();
+    });
 </script>
 
 <?php get_sidebar(); ?>
