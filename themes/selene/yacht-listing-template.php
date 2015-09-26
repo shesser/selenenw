@@ -71,5 +71,9 @@
     <!-- //Results -->
 </main>
 
+<script type="text/javascript">
+loadYachts();
+</script>
+
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>

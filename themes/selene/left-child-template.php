@@ -48,14 +48,7 @@
 
                     <div class="widget box-navy box">
                         <p>Let us know your requirements so we can assist in managing your yacht.</p>
-                        <a href="contact.html" class="trigger button full small white" title="Contact us">Contact us</a>
-                    </div>
-
-                    <div class="widget featured">
-                        <a href="yacht-sale-single.html"><img src="http://placehold.it/800x600" alt="boat" /></a>
-                        <div class="box-white">
-                            <h4><a href="yacht-sale-single.html" title="Featured Yacht: Elan 1923 Impression">Featured Yacht: <br /><strong>Elan 1923 Impression</strong></a></h4>
-                        </div>
+                        <a href="<?php echo get_permalink( get_page_by_path( 'contact' ) ); ?>" class="trigger button full small white" title="Contact us">Contact us</a>
                     </div>
                 </aside>
                 <!-- //OneFourth -->

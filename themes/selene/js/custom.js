@@ -1,7 +1,5 @@
 //ToDo: Make sure this runs with $
 jQuery(document).ready(function () {
-    loadYachts ();
-
     function loadYachts () {
         jQuery('#yacht-listing-load').show();
 
