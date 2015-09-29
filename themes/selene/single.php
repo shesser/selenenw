@@ -6,7 +6,7 @@
         <div class="wrap">
             <div class="row">
                 <!-- ThreeFourth -->
-                <div class="three-fourth hentry">
+                <div class="full-width hentry">
                     <?php while ( have_posts() ) : the_post(); ?>
                     <!-- Post Image -->
                     <?php selenenw_post_thumbnail(); ?>
@@ -85,7 +85,7 @@
                 <!-- //ThreeFourth -->
 
                 <!-- OneFourth -->
-                <aside class="one-fourth sidebar sidebar-right">
+                <!--<aside class="one-fourth sidebar sidebar-right">
                     <div class="widget">
                         <h3>Search the blog</h3>
                         <div class="search">
@@ -161,7 +161,7 @@
                         <h3>Advertisment</h3>
                         <p><a href="#"><img src="http://placehold.it/300x300" alt="" /></a></p>
                     </div>
-                </aside>
+                </aside>-->
                 <!-- //OneFourth -->
             </div>
         </div>
