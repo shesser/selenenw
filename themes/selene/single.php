@@ -104,7 +104,7 @@
                             <li><a href="#" title="Management">Management</a></li>
                         </ul>
                     </div>
-
+		
                     <div class="widget">
                         <h3>Latest posts</h3>
                         <ul class="latest-posts">
@@ -146,6 +146,7 @@
                         </ul>
                     </div>
 
+
                     <div class="widget">
                         <h3>A text widget</h3>
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation  commodo Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed </p>
@@ -164,6 +165,7 @@
                 <!-- //OneFourth -->
             </div>
         </div>
+
         <!-- //Wrapper -->
     </div>
     <!-- //Content-->

@@ -92,15 +92,17 @@
     <!-- //Deals -->
     <?php endif; ?>
 
+
     <!-- Testimonials -->
     <section class="testimonials">
         <div class="wrap center">
-            <h6>WOW - This is the Best Theme I have ever seen.</h6>
-            <p>"Excellent - you found the right boat in the right place at the right time,<br /> and managed to change the dates for our convenience - brilliant!" </p>
-            <p>- Johnatan Davidson</p>
+            <h6>Trusted by the community.</h6>
+            <p>"Awesome service & great people. I wouldn't take my Selene anywhere else" </p>
+            <p>- Jonathan Davidson</p>
         </div>
     </section>
-    <!-- //Testimonials -->
+<!-- //Testimonials --> 
+
 
     <!-- Photo -->
     <?php if( uf( 'parallax_cta_image', '', false ) || uf ( 'parallax_cta_title', '', false ) || uf ( 'parallax_cta_description', '', false ) ||  uf ( 'parallax_cta_button_text', '', false ) ) : ?>
@@ -187,7 +189,7 @@
     <?php $recent_yachts = selenenw_get_yacht_listing( false, array(), 'is_selenenw DESC', '12' ); ?>
     <?php if( $recent_yachts ) : ?>
     <!-- Yachts -->
-    <div class="results">
+   <div class="results">
         <?php foreach( $recent_yachts as $yacht ) :?>
         <!-- Item -->
         <figure class="one-fourth item">
@@ -205,7 +207,9 @@
         <!-- //Item -->
         <?php endforeach; ?>
     </div>
-    <!-- //Yachts -->
+  <!-- //Yachts -->
+
+
     <?php endif; ?>
 </main>
 <!-- //Main -->
