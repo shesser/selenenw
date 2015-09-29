@@ -9,7 +9,7 @@
                     <!-- OneFourth -->
                     <aside class="one-fourth sidebar sidebar-left">
                         <div class="widget box-navy box">
-                            <p>Let us know your requirements so we can assist in managing your yacht.</p>
+                            <p>Let us know your requirements so we can assist in finding your perfect boat.</p>
                             <a href="<?php echo get_permalink( get_page_by_path( 'contact' ) ); ?>" class="trigger button full small white" title="Contact us">Contact
                                 us</a>
                         </div>

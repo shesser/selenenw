@@ -95,9 +95,9 @@
     <!-- Testimonials -->
     <section class="testimonials">
         <div class="wrap center">
-            <h6>WOW - This is the Best Theme I have ever seen.</h6>
-            <p>"Excellent - you found the right boat in the right place at the right time,<br /> and managed to change the dates for our convenience - brilliant!" </p>
-            <p>- Johnatan Davidson</p>
+            <h6>Trusted by the community.</h6>
+            <p>"Awesome service & great people. I wouldn't take my Selene anywhere else" </p>
+            <p>- Jonathan Davidson</p>
         </div>
     </section>
     <!-- //Testimonials -->
