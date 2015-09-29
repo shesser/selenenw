@@ -1,7 +1,7 @@
 jQuery(function( $ ) {
 
 	// Don't do anything unless we're on the right page
-	if( ! $( '#ultimate-fields, #ultimate-post-type' ).size() && typenow != 'ultimate-post-type' ) {
+	if( ! $( '#ultimate-fields, #ultimate-post-type' ).size() /*&& typenow != 'ultimate-post-type'*/ ) {
 		return;
 	}
 
