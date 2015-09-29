@@ -184,28 +184,30 @@
     <?php endif; ?>
     <!-- //Call to action -->
 
-    <?php $recent_yachts = selenenw_get_yacht_listing( false, array(), 'is_selenenw DESC', '12' ); ?>
-    <?php if( $recent_yachts ) : ?>
-    <!-- Yachts -->
-    <div class="results">
-        <?php foreach( $recent_yachts as $yacht ) :?>
-        <!-- Item -->
-        <figure class="one-fourth item">
-            <img src="<?php echo $yacht['primary_image']; ?>" alt="<?php echo $yacht['name']; ?>" />
-            <figcaption>
-                <dl>
-                    <dt><?php echo $yacht['name']; ?></dt>
-                    <dd><span class="icojam_calendar"></span> <?php echo $yacht['built']; ?></dd>
-                    <dd><span class="icojam_ruler"></span> <?php echo $yacht['length']; ?></dd>
-                </dl>
-                <div class="price">Price <strong>$<?php echo $yacht['price']; ?></strong></div>
-                <a href="<?php echo $yacht['url']; ?>" title="Read More" class="button small gold">Read More</a>
-            </figcaption>
-        </figure>
-        <!-- //Item -->
-        <?php endforeach; ?>
-    </div>
-    <!-- //Yachts -->
+    <?php if( uf ( 'yacht_listing_show', '', false ) ) : ?>
+        <?php $recent_yachts = selenenw_get_yacht_listing( false, array(), 'is_selenenw DESC', '12' ); ?>
+        <?php if( $recent_yachts ) : ?>
+        <!-- Yachts -->
+        <div class="results">
+            <?php foreach( $recent_yachts as $yacht ) :?>
+            <!-- Item -->
+            <figure class="one-fourth item">
+                <img src="<?php echo $yacht['primary_image']; ?>" alt="<?php echo $yacht['name']; ?>" />
+                <figcaption>
+                    <dl>
+                        <dt><?php echo $yacht['name']; ?></dt>
+                        <dd><span class="icojam_calendar"></span> <?php echo $yacht['built']; ?></dd>
+                        <dd><span class="icojam_ruler"></span> <?php echo $yacht['length']; ?></dd>
+                    </dl>
+                    <div class="price">Price <strong>$<?php echo $yacht['price']; ?></strong></div>
+                    <a href="<?php echo $yacht['url']; ?>" title="Read More" class="button small gold">Read More</a>
+                </figcaption>
+            </figure>
+            <!-- //Item -->
+            <?php endforeach; ?>
+        </div>
+        <!-- //Yachts -->
+        <?php endif; ?>
     <?php endif; ?>
 </main>
 <!-- //Main -->
