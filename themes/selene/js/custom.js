@@ -51,7 +51,7 @@ function loadYachts () {
             jQuery.each(data, function(i, v) {
                 listing += '<!-- Item -->' +
                     '<figure class="one-fourth item">' +
-                    '<img src="' + v.primary_image + '" alt="' + v.name + '" />' +
+                    '<img src="' + v.primary_image + '" alt="' + v.name + '" onclick="javascript:window.location.href=\'' + v.url + '\'"/>' +
                     '<figcaption>' +
                     '<dl>' +
                     '<dt>' + v.name + '</dt>' +
