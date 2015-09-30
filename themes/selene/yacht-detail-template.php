@@ -165,7 +165,7 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                             <!-- ThreeFourth -->
                             <div class="three-fourth">
                                 <h2>Contact the broker directly</h2>
-                                <p>Please use the form below in order to send an inqury regarding the yacht. You will be contacted by the broker within 24 hours. Lorem ipsum dolor sit amet, thank you very much.</p>
+                                <p>Please use the form below in order to send an inqury regarding the yacht. You will be contacted by the broker within 24 hours. Thank you very much.</p>
                                 <p>All fields are required.</p>
                                 <?php echo do_shortcode( '[contact-form-7 id="178" title="Contact Broker"]' ); ?>
                             </div>

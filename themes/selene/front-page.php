@@ -96,8 +96,8 @@
     <section class="testimonials">
         <div class="wrap center">
             <h6>Trusted by the community.</h6>
-            <p>"Awesome service & great people. I wouldn't take my Selene anywhere else" </p>
-            <p>- Jonathan Davidson</p>
+            <p>"The people of Selene Yachts NW turned our dream into a reality. That's what they do." </p>
+            <p>- Tym & June Tymczyszyn - Selene 48 "Marmee"</p>
         </div>
     </section>
     <!-- //Testimonials -->
