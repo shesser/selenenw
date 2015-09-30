@@ -48,10 +48,14 @@ function loadYachts () {
         }, function(data) {
             //console.log(data);
             var listing = '';
+            var tapLink = '';
             jQuery.each(data, function(i, v) {
+                if ( jQuery(window).width() <= 1024 )
+                    tapLink = 'onclick="javascript:window.location.href=\'' + v.url + '\'; return false;"';
+
                 listing += '<!-- Item -->' +
-                    '<figure class="one-fourth item">' +
-                    '<img src="' + v.primary_image + '" alt="' + v.name + '" onclick="javascript:window.location.href=\'' + v.url + '\'; return false;"/>' +
+                    '<figure class="one-fourth item" ' + tapLink + '>' +
+                    '<img src="' + v.primary_image + '" alt="' + v.name + '" />' +
                     '<figcaption>' +
                     '<dl>' +
                     '<dt>' + v.name + '</dt>' +
