@@ -197,41 +197,47 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                 else
                     parse_str(substr(html_entity_decode($xpath->query('a', $name_node)->item(0)->getAttribute('href')), 49), $yacht_parameters);
 
-                //$yacht_parameters[ 'boat_id' ]
-                $name = str_replace(array("\xC2", "\xA0"), '', trim($name_node->nodeValue));
-                $length = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(3)->nodeValue));
-                $built = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(5)->nodeValue));
-                $price = str_replace(array("\xC2", "\xA0", ","), '', trim($xpath->query('td', $value)->item(6)->nodeValue));
-                $codes = trim(str_replace(array("\xC2", "\xA0"), array(' ', ''), $xpath->query('td', $value)->item(8)->nodeValue));
-                $location = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(9)->nodeValue));
-                //$yacht_parameters[ 'slim' ];
+                $yacht_exists = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "yachts WHERE id = '" . trim($yacht_parameters[ 'boat_id' ]) . "'" );
 
-                $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
+                if ( is_null( $yacht_exists ) ) {
+                    //$yacht_parameters[ 'boat_id' ]
+                    $name = str_replace(array("\xC2", "\xA0"), '', trim($name_node->nodeValue));
+                    $length = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(3)->nodeValue));
+                    $built = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(5)->nodeValue));
+                    $price = str_replace(array("\xC2", "\xA0", ","), '', trim($xpath->query('td', $value)->item(6)->nodeValue));
+                    $codes = trim(str_replace(array("\xC2", "\xA0"), array(' ', ''), $xpath->query('td', $value)->item(8)->nodeValue));
+                    $location = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(9)->nodeValue));
+                    //$yacht_parameters[ 'slim' ];
 
-                if ( ! is_wp_error( $primary_image ) ) {
-                    write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
+                    $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
+
+                    if ( ! is_wp_error( $primary_image ) ) {
+                        write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
+                    } else {
+                        write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
+                        $primary_image = 0;
+                    }
+
+                    $yacht_data = array(
+                        'id' => $yacht_parameters[ 'boat_id' ],
+                        'name' => $name,
+                        'length' => $length,
+                        'built' => $built,
+                        'price' => $price,
+                        'codes' => $codes,
+                        'location' => $location,
+                        'primary_image' => $primary_image,
+                        'slim' => $yacht_parameters[ 'slim' ],
+                        'is_selenenw' => $is_selenenw
+                    );
+
+                    if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
+                        $insert_success_log[] = 'Success: Inserted yacht '. $yacht_parameters[ 'boat_id' ];
+                    } else {
+                        $insert_failure_log[] = 'Failure: Insert failed on yacht '. $yacht_parameters[ 'boat_id' ];
+                    }
                 } else {
-                    write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
-                    $primary_image = 0;
-                }
-
-                $yacht_data = array(
-                    'id' => $yacht_parameters[ 'boat_id' ],
-                    'name' => $name,
-                    'length' => $length,
-                    'built' => $built,
-                    'price' => $price,
-                    'codes' => $codes,
-                    'location' => $location,
-                    'primary_image' => $primary_image,
-                    'slim' => $yacht_parameters[ 'slim' ],
-                    'is_selenenw' => $is_selenenw
-                );
-
-                if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
-                    $insert_success_log[] = 'Success: Inserted yacht '. $yacht_parameters[ 'boat_id' ];
-                } else {
-                    $insert_failure_log[] = 'Failure: Insert failed on yacht '. $yacht_parameters[ 'boat_id' ];
+                    $insert_failure_log[] = 'Failure: Yacht '. $yacht_parameters[ 'boat_id' ].' already exists';
                 }
             }
 
