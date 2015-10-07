@@ -133,7 +133,10 @@ function add_query_vars($vars) {
 add_filter('query_vars', 'add_query_vars');
 
 function add_rewrite_rules($rules) {
-    $new_rule = array('yacht/([^/]+)/?$' => 'index.php?pagename=yacht&id=$matches[1]');
+    $new_rule = array(
+        'yacht/([^/]+)/?$' => 'index.php?pagename=yacht&id=$matches[1]'
+        'yacht-model/([^/]+)/?$' => 'index.php?pagename=yacht-model&id=$matches[1]'
+    );
     $rules = $new_rule + $rules;
     return $rules;
 }
