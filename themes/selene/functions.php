@@ -449,7 +449,7 @@ function fetch_yachtworld_images() {
     }
 }
 
-/*function cronstarter_activation() {
+/* function cronstarter_activation() {
     if( !wp_next_scheduled( 'fetch_yachtworld_listing' ) ) {
         wp_schedule_event( time(), 'everyminute', 'fetch_yachtworld_listing' );
     }

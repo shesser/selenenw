@@ -95,7 +95,7 @@
     <!-- Testimonials -->
     <section class="testimonials">
         <div class="wrap center">
-            <h6>Trusted by the community.</h6>
+            <h6>Trusted by the Selene community.</h6>
             <p>"The people of Selene Yachts NW turned our dream into a reality. That's what they do." </p>
             <p>- Tym & June Tymczyszyn - Selene 48 "Marmee"</p>
         </div>
