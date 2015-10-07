@@ -133,7 +133,10 @@ function add_query_vars($vars) {
 add_filter('query_vars', 'add_query_vars');
 
 function add_rewrite_rules($rules) {
-    $new_rule = array('yacht/([^/]+)/?$' => 'index.php?pagename=yacht&id=$matches[1]');
+    $new_rule = array(
+        'yacht/([^/]+)/?$' => 'index.php?pagename=yacht&id=$matches[1]',
+        'yacht-model/([^/]+)/?$' => 'index.php?pagename=yacht-model&id=$matches[1]'
+    );
     $rules = $new_rule + $rules;
     return $rules;
 }
@@ -625,8 +628,7 @@ function selenenw_get_featured_yachts() {
 }
 
 // define the wpcf7_before_send_mail callback
-function selenenw_wpcf7_before_send_mail( $contact_form )
-{
+function selenenw_wpcf7_before_send_mail( $contact_form ) {
     if ( $contact_form->name() == 'contact-broker' ) {
         $mail = $contact_form->prop( 'mail' );
         $mail['body'] = str_replace( '#yacht-details#', wp_get_referer(), $mail['body'] );
@@ -638,9 +640,9 @@ function selenenw_wpcf7_before_send_mail( $contact_form )
 add_action( 'wpcf7_before_send_mail', 'selenenw_wpcf7_before_send_mail', 10, 1 );
 
 // define the wpcf7_form_class_attr callback
-function filter_wpcf7_form_class_attr( $class )
-{
+function filter_wpcf7_form_class_attr( $class ) {
     global $wp_query;
+
     if( isset( $wp_query->query_vars['id'] ) )
         $class .= ' row';
 
@@ -649,3 +651,31 @@ function filter_wpcf7_form_class_attr( $class )
 
 // add the filter
 add_filter( 'wpcf7_form_class_attr', 'filter_wpcf7_form_class_attr', 10, 1 );
+
+add_action( 'wp_ajax_selenenw_get_model_listing', 'selenenw_get_model_listing_form_callback' );
+add_action( 'wp_ajax_nopriv_selenenw_get_model_listing', 'selenenw_get_model_listing_form_callback' );
+/**
+ * Ajax callback function that retrieves the Model Listing
+ */
+function selenenw_get_model_listing_form_callback() {
+    global $wpdb;
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "models";
+    $models = $wpdb->get_results( $query );
+
+    foreach ( $models as $model ) {
+        $url = get_permalink( get_page_by_path( 'yacht-model' ) ) . sanitize_title( $model->name ) . '-' . $model->id . '/';
+
+        $response[] = array(
+            'id' => $model->id,
+            'name' => $model->name,
+            'length' => $model->length,
+            'primary_image' => $model->primary_image,
+            'url' => $url,
+            'description' => substr( strip_tags( $model->description ), 0, 300 ) . '...',
+        );
+    }
+
+    echo ( !empty( $response ) ) ? json_encode( $response ) : 0;
+    exit;
+}

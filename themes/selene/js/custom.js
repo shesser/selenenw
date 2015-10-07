@@ -77,3 +77,40 @@ function loadYachts () {
         }
     );
 }
+
+function loadModels () {
+    jQuery('#yacht-listing-load').show();
+
+    jQuery.post(
+        selenenw_ajax.ajax_url,
+        {
+            action: 'selenenw_get_model_listing',
+        }, function(data) {
+            var listing = '';
+            var tapLink = '';
+            jQuery.each(data, function(i, v) {
+                if ( jQuery(window).width() <= 1024 )
+                    tapLink = 'onclick="javascript:window.location.href=\'' + v.url + '\'; return false;"';
+
+                listing += '<!-- Item -->' +
+                    '<figure class="one-fourth item" ' + tapLink + '>' +
+                    '<img src="' + v.primary_image + '" alt="' + v.name + '" />' +
+                    '<figcaption>' +
+                    '<dl>' +
+                    '<dt>' + v.name + '</dt>' +
+                    '<dd style="width: 100%; border-left: none;">' + v.description + '</dd>' +
+                    '</dl>' +
+                    '<a href="' + v.url + '" title="" class="button small gold">Read more</a>' +
+                    '</figcaption>' +
+                    '</figure>' +
+                    '<!-- //Item -->';
+            });
+
+            jQuery('.results').html( listing );
+            jQuery('#yacht-listing-load').fadeOut();
+        }, "json"
+    ) .fail(function() {
+            alert('Oops! there was an error. Please try again.');
+        }
+    );
+}
