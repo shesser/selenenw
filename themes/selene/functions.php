@@ -2,50 +2,50 @@
 require_once('inc/themeslug_walker_nav_menu.php');
 
 if ( ! function_exists( 'selenenw_setup' ) ) :
-/**
- * Sets up theme defaults and registers support for various WordPress features.
- */
-function selenenw_setup() {
-    /*
-	 * Let WordPress manage the document title.
-	 * By adding theme support, we declare that this theme does not use a
-	 * hard-coded <title> tag in the document head, and expect WordPress to
-	 * provide it for us.
-	 */
-    add_theme_support( 'title-tag' );
-
-    /*
-     * Enable support for Post Thumbnails on posts and pages.
-     *
-     * See: https://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
+    /**
+     * Sets up theme defaults and registers support for various WordPress features.
      */
-    add_theme_support( 'post-thumbnails' );
-    set_post_thumbnail_size( 825, 510, true );
+    function selenenw_setup() {
+        /*
+         * Let WordPress manage the document title.
+         * By adding theme support, we declare that this theme does not use a
+         * hard-coded <title> tag in the document head, and expect WordPress to
+         * provide it for us.
+         */
+        add_theme_support( 'title-tag' );
 
-    // This theme uses wp_nav_menu() in three locations.
-    register_nav_menus( array(
-        'primary' => __( 'Primary Menu', 'selenenw' ),
-        'social'  => __( 'Social Links Menu', 'selenenw' ),
-        'footer'  => __( 'Footer Menu', 'selenenw' ),
-    ) );
+        /*
+         * Enable support for Post Thumbnails on posts and pages.
+         *
+         * See: https://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
+         */
+        add_theme_support( 'post-thumbnails' );
+        set_post_thumbnail_size( 825, 510, true );
 
-    /*
-     * Switch default core markup for search form, comment form, and comments
-     * to output valid HTML5.
-     */
-    add_theme_support( 'html5', array(
-        'search-form', 'comment-form', 'comment-list', 'gallery', 'caption'
-    ) );
+        // This theme uses wp_nav_menu() in three locations.
+        register_nav_menus( array(
+            'primary' => __( 'Primary Menu', 'selenenw' ),
+            'social'  => __( 'Social Links Menu', 'selenenw' ),
+            'footer'  => __( 'Footer Menu', 'selenenw' ),
+        ) );
 
-    /*
-     * Enable support for Post Formats.
-     *
-     * See: https://codex.wordpress.org/Post_Formats
-     */
-    add_theme_support( 'post-formats', array(
-        'aside', 'image', 'video', 'quote', 'link', 'gallery', 'status', 'audio', 'chat'
-    ) );
-}
+        /*
+         * Switch default core markup for search form, comment form, and comments
+         * to output valid HTML5.
+         */
+        add_theme_support( 'html5', array(
+            'search-form', 'comment-form', 'comment-list', 'gallery', 'caption'
+        ) );
+
+        /*
+         * Enable support for Post Formats.
+         *
+         * See: https://codex.wordpress.org/Post_Formats
+         */
+        add_theme_support( 'post-formats', array(
+            'aside', 'image', 'video', 'quote', 'link', 'gallery', 'status', 'audio', 'chat'
+        ) );
+    }
 endif; // selenenw_setup
 add_action( 'after_setup_theme', 'selenenw_setup' );
 
@@ -643,3 +643,31 @@ function filter_wpcf7_form_class_attr( $class )
 
 // add the filter
 add_filter( 'wpcf7_form_class_attr', 'filter_wpcf7_form_class_attr', 10, 1 );
+
+add_action( 'wp_ajax_selenenw_get_model_listing', 'selenenw_get_model_listing_form_callback' );
+add_action( 'wp_ajax_nopriv_selenenw_get_model_listing', 'selenenw_get_model_listing_form_callback' );
+/**
+ * Ajax callback function that retrieves the Model Listing
+ */
+function selenenw_get_model_listing_form_callback() {
+    global $wpdb;
+
+    $query = "SELECT * FROM " . $wpdb->prefix . "models";
+    $models = $wpdb->get_results( $query );
+
+    foreach ( $models as $model ) {
+        $url = get_permalink( get_page_by_path( 'yacht-model' ) ) . sanitize_title( $model->name ) . '-' . $model->id . '/';
+
+        $response[] = array(
+            'id' => $model->id,
+            'name' => $model->name,
+            'length' => $model->length,
+            'primary_image' => $model->primary_image,
+            'url' => $url,
+            'description' => substr( strip_tags( $model->description ), 0, 300 ) . '...',
+        );
+    }
+
+    echo ( !empty( $response ) ) ? json_encode( $response ) : 0;
+    exit;
+}

@@ -169,6 +169,15 @@
 				$($(this).attr('href')).show().siblings('.tab-content').hide();
 			});
 
+			$('.page-template-model-detail-template .content .tab-content').hide().first().show();
+			$('.page-template-model-detail-template .content .tabs li:first').addClass('current');
+
+			$('.page-template-model-detail-template .content .tabs a').on('click', function (e) {
+				e.preventDefault();
+				$(this).closest('li').addClass('current').siblings().removeClass('current');
+				$($(this).attr('href')).show().siblings('.tab-content').hide();
+			});
+
 			var hash = $.trim( window.location.hash );
 			if (hash) $('.content .tabs a[href$="'+hash+'"]').trigger('click');
 			
