@@ -216,7 +216,7 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                     $existing_primary_image = explode( '/', $existing_yacht->primary_image );
 
                     require_once(ABSPATH . 'wp-admin/includes/file.php');
-                    $primary_image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );
+                    $primary_image_path = get_home_path() . parse_url( $existing_yacht->primary_image, PHP_URL_PATH );
 
                     if( ( end( $new_primary_image ) != end( $existing_primary_image ) ) || !file_exists( $primary_image_path ) ) {
                         $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
