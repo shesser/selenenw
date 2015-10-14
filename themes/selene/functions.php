@@ -209,32 +209,73 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                 $location = str_replace(array("\xC2", "\xA0"), '', trim($xpath->query('td', $value)->item(9)->nodeValue));
                 //$yacht_parameters[ 'slim' ];
 
-                $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
+                $existing_yacht = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->prefix . 'yachts WHERE id = ' . $yacht_parameters['boat_id'] );
 
-                if ( ! is_wp_error( $primary_image ) ) {
-                    write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
+                if ( !is_null( $existing_yacht ) ) {
+                    $new_primary_image = explode( '/', $yacht_parameters['primary_photo_url'] );
+                    $existing_primary_image = explode( '/', $existing_yacht->primary_image );
+
+                    $primary_image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );
+
+                    if( ( end( $new_primary_image ) != end( $existing_primary_image ) ) || !file_exists( $primary_image_path ) ) {
+                        $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
+
+                        if ( ! is_wp_error( $primary_image ) ) {
+                            write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
+                        } else {
+                            write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
+                            $primary_image = 0;
+                        }
+                    } else {
+                        $primary_image = $existing_primary_image;
+                        write_log( 'NOTICE: Primary image already existed for ' . $yacht_parameters['boat_id'] );
+                    }
+
+                    $yacht_data = array(
+                        'name' => $name,
+                        'length' => $length,
+                        'built' => $built,
+                        'price' => $price,
+                        'codes' => $codes,
+                        'location' => $location,
+                        'primary_image' => $primary_image,
+                        'slim' => $yacht_parameters[ 'slim' ],
+                        'is_selenenw' => $is_selenenw
+                    );
+
+                    if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $existing_yacht->id ) ) ) {
+                        $insert_success_log[] = 'Success: Updated yacht '. $yacht_parameters[ 'boat_id' ];
+                    } else {
+                        $insert_failure_log[] = 'Failure: Update failed on yacht '. $yacht_parameters[ 'boat_id' ];
+                    }
                 } else {
-                    write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
-                    $primary_image = 0;
-                }
+                    $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
 
-                $yacht_data = array(
-                    'id' => $yacht_parameters[ 'boat_id' ],
-                    'name' => $name,
-                    'length' => $length,
-                    'built' => $built,
-                    'price' => $price,
-                    'codes' => $codes,
-                    'location' => $location,
-                    'primary_image' => $primary_image,
-                    'slim' => $yacht_parameters[ 'slim' ],
-                    'is_selenenw' => $is_selenenw
-                );
+                    if ( ! is_wp_error( $primary_image ) ) {
+                        write_log( 'Success: Downloaded primary image for ' . $yacht_parameters['boat_id'] );
+                    } else {
+                        write_log( array('Failure: Unable to download primary image for ' . $yacht_parameters[ 'boat_id' ], $primary_image) );
+                        $primary_image = 0;
+                    }
 
-                if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
-                    $insert_success_log[] = 'Success: Inserted yacht '. $yacht_parameters[ 'boat_id' ];
-                } else {
-                    $insert_failure_log[] = 'Failure: Insert failed on yacht '. $yacht_parameters[ 'boat_id' ];
+                    $yacht_data = array(
+                        'id' => $yacht_parameters[ 'boat_id' ],
+                        'name' => $name,
+                        'length' => $length,
+                        'built' => $built,
+                        'price' => $price,
+                        'codes' => $codes,
+                        'location' => $location,
+                        'primary_image' => $primary_image,
+                        'slim' => $yacht_parameters[ 'slim' ],
+                        'is_selenenw' => $is_selenenw
+                    );
+
+                    if ( $wpdb->insert( $wpdb->prefix . 'yachts', $yacht_data ) ) {
+                        $insert_success_log[] = 'Success: Inserted yacht '. $yacht_parameters[ 'boat_id' ];
+                    } else {
+                        $insert_failure_log[] = 'Failure: Insert failed on yacht '. $yacht_parameters[ 'boat_id' ];
+                    }
                 }
             }
 
@@ -382,7 +423,7 @@ function fetch_yachtworld_detail() {
 function fetch_yachtworld_images() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts WHERE images IS NULL";
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
@@ -405,29 +446,44 @@ function fetch_yachtworld_images() {
 
             $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
             $js = $xpath->query('/html/head/script')->item(0)->childNodes->item(0)->nodeValue;
-            $images = array();
+
+            if( !is_null($yacht->images) ){
+                $images = json_decode( $yacht->images );
+            } else {
+                $images = array();
+            }
+
             $i = 1;
 
             foreach ( $columns as $column ) {
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
-                $result = get_yacht_image( $image );
 
-                $pos = strpos($js, 'PicDescription[' . $i . ']');
-                $eol_pos = strpos($js, ';', $pos) - $pos;
-                $caption = str_replace( array( 'PicDescription[' . $i . '] = \'', '\'' ), '', substr($js, $pos, $eol_pos ) );
+                $new_image = explode( '/', $image );
 
-                sleep( rand ( 1, 3 ) ); //Just a contingency to not get blacklisted
+                /*$image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );*/
 
-                if ( ! is_wp_error( $result ) ) {
-                    write_log( 'Success: Downloaded ' . $image );
-                    $images[] = array(
-                        'original' => str_replace( '640x465_', '', $result),
-                        'resized' => $result,
-                        'caption' => $caption,
-                    );
+                if( !strstr( $yacht->images, end( $new_image ) ) ) {
+                    $result = get_yacht_image( $image );
+
+                    $pos = strpos($js, 'PicDescription[' . $i . ']');
+                    $eol_pos = strpos($js, ';', $pos) - $pos;
+                    $caption = str_replace( array( 'PicDescription[' . $i . '] = \'', '\'' ), '', substr($js, $pos, $eol_pos ) );
+
+                    sleep( rand ( 1, 3 ) ); //Just a contingency to not get blacklisted
+
+                    if ( ! is_wp_error( $result ) ) {
+                        write_log( 'Success: Downloaded ' . $image );
+                        $images[] = array(
+                            'original' => str_replace( '640x465_', '', $result),
+                            'resized' => $result,
+                            'caption' => $caption,
+                        );
+                    } else {
+                        write_log( array('Failure: Unable to download' . $image, $result) );
+                    }
                 } else {
-                    write_log( array('Failure: Unable to download' . $image, $result) );
+                    write_log( 'NOTICE: Image exists ' . $image );
                 }
 
                 $i++;
