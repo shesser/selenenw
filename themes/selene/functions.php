@@ -218,7 +218,7 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                     /*require_once(ABSPATH . 'wp-admin/includes/file.php');
                     $primary_image_path = get_home_path() . parse_url( $existing_yacht->primary_image, PHP_URL_PATH );*/
 
-                    if( strstr( $new_primary_image[0], end( $existing_primary_image ) ) ) {
+                    if( !strstr( end( $existing_primary_image ), $new_primary_image[0] ) ) {
                         $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
 
                         if ( ! is_wp_error( $primary_image ) ) {
@@ -460,11 +460,11 @@ function fetch_yachtworld_images() {
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
 
-                $new_image = explode( '/', $image );
+                $new_image = explode( '.', explode( '/', $image ) );
 
                 /*$image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );*/
 
-                if( !strstr( $yacht->images, end( $new_image ) ) ) {
+                if( !strstr( $yacht->images, $new_image[0] ) ) {
                     $result = get_yacht_image( $image );
 
                     $pos = strpos($js, 'PicDescription[' . $i . ']');
