@@ -215,12 +215,10 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                     $new_primary_image = explode( '/', $yacht_parameters['primary_photo_url'] );
                     $new_primary_image = explode( '.', end( $new_primary_image ) );
 
-                    $existing_primary_image = explode( '/', $existing_yacht->primary_image );
-
                     /*require_once(ABSPATH . 'wp-admin/includes/file.php');
                     $primary_image_path = get_home_path() . parse_url( $existing_yacht->primary_image, PHP_URL_PATH );*/
 
-                    if( !strstr( end( $existing_primary_image ), $new_primary_image[0] ) ) {
+                    if( !strstr( $existing_yacht->primary_image, $new_primary_image[0] ) ) {
                         $primary_image = get_yacht_image ( $yacht_parameters['primary_photo_url'] );
 
                         if ( ! is_wp_error( $primary_image ) ) {
@@ -230,7 +228,7 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                             $primary_image = 0;
                         }
                     } else {
-                        $primary_image = $existing_primary_image;
+                        $primary_image = $existing_yacht->primary_image;
                         write_log( 'NOTICE: Primary image already existed for ' . $yacht_parameters['boat_id'] );
                     }
 
