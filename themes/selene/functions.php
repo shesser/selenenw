@@ -212,7 +212,9 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
                 $existing_yacht = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->prefix . 'yachts WHERE id = ' . $yacht_parameters['boat_id'] );
 
                 if ( !is_null( $existing_yacht ) ) {
-                    $new_primary_image = explode( '.', explode( '/', $yacht_parameters['primary_photo_url'] ) );
+                    $new_primary_image = explode( '/', $yacht_parameters['primary_photo_url'] );
+                    $new_primary_image = explode( '.', end( $new_primary_image ) );
+
                     $existing_primary_image = explode( '/', $existing_yacht->primary_image );
 
                     /*require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -460,7 +462,8 @@ function fetch_yachtworld_images() {
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
 
-                $new_image = explode( '.', explode( '/', $image ) );
+                $new_image = explode( '/', $image );
+                $new_image = explode( '.', end( $new_image ) );
 
                 /*$image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );*/
 
