@@ -424,7 +424,7 @@ function fetch_yachtworld_detail() {
 function fetch_yachtworld_images() {
     global $wpdb;
 
-    $query = "SELECT * FROM " . $wpdb->prefix . "yachts";
+    $query = "SELECT * FROM " . $wpdb->prefix . "yachts ORDER BY images ASC";
     $yachts = $wpdb->get_results( $query );
 
     foreach ( $yachts as $yacht ) {
