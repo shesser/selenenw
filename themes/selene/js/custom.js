@@ -56,6 +56,7 @@ function loadYachts () {
                 listing += '<!-- Item -->' +
                     '<figure class="one-fourth item" ' + tapLink + '>' +
                     '<img src="' + v.primary_image + '" alt="' + v.name + '" />' +
+                    '<div class="item-bottom-strip"><h1>' + v.name + '</h1></div>'
                     '<figcaption>' +
                     '<dl>' +
                     '<dt>' + v.name + '</dt>' +
