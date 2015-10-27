@@ -63,7 +63,7 @@ function loadYachts () {
                     '<dd>Length: ' + v.length + '</dd>' +
                     '</dl>' +
                     '<div class="price">Asking price  <strong>$' + v.price + '</strong></div>' +
-                    '<a href="' + v.url + '" title="" class="button small gold">Read more</a>' +
+                    '<a href="' + v.url + '" title="" class="button small gold">Learn more</a>' +
                     '</figcaption>' +
                     '</figure>' +
                     '<!-- //Item -->';
@@ -98,9 +98,9 @@ function loadModels () {
                     '<figcaption>' +
                     '<dl>' +
                     '<dt>' + v.name + '</dt>' +
-                    '<dd style="width: 100%; border-left: none;">' + v.description + '</dd>' +
+                    
                     '</dl>' +
-                    '<a href="' + v.url + '" title="" class="button small gold">Read more</a>' +
+                    '<a href="' + v.url + '" title="" class="button small gold">Learn more</a>' +
                     '</figcaption>' +
                     '</figure>' +
                     '<!-- //Item -->';

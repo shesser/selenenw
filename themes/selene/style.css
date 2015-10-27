@@ -270,7 +270,7 @@ table td:first-child 	{background:#eee;color:#444;}
 .results figure 				{padding:0;position:relative;-webkit-transition:all 0.2s ease-in;-moz-transition:all 0.2s ease-in;-o-transition:all 0.2s ease-in;-ms-transition:all 0.2s ease-in;transition:all 0.2s ease-in;}
 .results figure *				{position:relative;z-index:2;-webkit-transition:all 0.2s ease-in;-moz-transition:all 0.2s ease-in;-o-transition:all 0.2s ease-in;-ms-transition:all 0.2s ease-in;transition:all 0.2s ease-in;}
 .results figcaption 			{text-align:center;padding:30px;position:absolute;top:0;left:0;width:100%;height:100%;z-index:20;opacity:0;-ms-opacity:0;color:#515E64;background:#fff;-webkit-box-shadow:0 0 10px rgba(0,0,0,.4);-moz-box-shadow:0 0 10px rgba(0,0,0,.4);box-shadow:0 0 10px rgba(0,0,0,.4);}
-.results figcaption:before		{border:1px solid rgba(189,189,189,.7);content:"";position:absolute;top:5px;bottom:5px;left:5px;right:5px;}
+.results figcaption:before		{border:1px solid rgba(189,189,189,.7)content:"";position:absolute;top:5px;bottom:5px;left:5px;right:5px;}
 .results figure:hover figcaption	{opacity:1;-ms-opacity:1;}
 .results figcaption dl 				{}
 .results figcaption dt				{font-size:21px;font-weight:700;text-transform:uppercase;padding:0 0 27px;}
