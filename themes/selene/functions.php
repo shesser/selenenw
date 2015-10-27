@@ -515,6 +515,7 @@ function fetch_yachtworld_images() {
                 write_log( 'NOTICE: Following images were not located' );
                 write_log( $delete_images );
 
+                require_once(ABSPATH . 'wp-admin/includes/file.php');
                 foreach ( $delete_images as $delete_image ) {
                     $image_paths = array(
                         get_home_path() . parse_url( $delete_image['original'], PHP_URL_PATH ),
