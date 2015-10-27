@@ -461,19 +461,18 @@ function fetch_yachtworld_images() {
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
 
+                $image_exists = false;
                 $new_image = explode( '/', $image );
                 $new_image = explode( '.', end( $new_image ) );
                 $new_image = $new_image[0];
 
                 if( !empty( $images ) ) {
                     $image_exists = array_filter( $images, function ( $item ) use ( $new_image ) {
-                        if ( stripos( $item['original'], $new_image[0] ) !== false ) {
+                        if ( stripos( $item['original'], $new_image ) !== false ) {
                             return true;
                         }
                         return false;
                     });
-                } else {
-                    $image_exists = false;
                 }
 
                 if( !$image_exists ) {
@@ -496,7 +495,7 @@ function fetch_yachtworld_images() {
                         write_log( array('Failure: Unable to download' . $image, $result) );
                     }
                 } else {
-                    $new_images[] = $image_exists[0];
+                    $new_images[] = current( $image_exists );
                     write_log( 'NOTICE: Image exists ' . $image );
                 }
 
@@ -512,9 +511,6 @@ function fetch_yachtworld_images() {
             });
 
             if( !empty( $delete_images ) ) {
-                write_log( 'NOTICE: Following images were not located' );
-                write_log( $delete_images );
-
                 require_once(ABSPATH . 'wp-admin/includes/file.php');
                 foreach ( $delete_images as $delete_image ) {
                     $image_paths = array(
