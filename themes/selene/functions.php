@@ -584,7 +584,7 @@ function selenenw_get_yacht_listing_form_callback() {
     selenenw_get_yacht_listing( true );
 }
 
-function selenenw_get_yacht_listing( $ajax, $condition_array = array(), $order = null, $limit = null ) {
+function selenenw_get_yacht_listing( $ajax, $condition_array = array(), $order = 'price DESC', $limit = null ) {
     global $wpdb;
 
     if ( $ajax ) {
