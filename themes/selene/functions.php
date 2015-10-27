@@ -448,8 +448,9 @@ function fetch_yachtworld_images() {
             $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
             $js = $xpath->query('/html/head/script')->item(0)->childNodes->item(0)->nodeValue;
 
+            $new_images = array();
             if( !is_null($yacht->images) ){
-                $images = json_decode( $yacht->images );
+                $images = json_decode( $yacht->images, true );
             } else {
                 $images = array();
             }
@@ -462,10 +463,20 @@ function fetch_yachtworld_images() {
 
                 $new_image = explode( '/', $image );
                 $new_image = explode( '.', end( $new_image ) );
+                $new_image = $new_image[0];
 
-                /*$image_path = get_home_path() . parse_url( $existing_primary_image, PHP_URL_PATH );*/
+                if( !empty( $images ) ) {
+                    $image_exists = array_filter( $images, function ( $item ) use ( $new_image ) {
+                        if ( stripos( $item['original'], $new_image[0] ) !== false ) {
+                            return true;
+                        }
+                        return false;
+                    });
+                } else {
+                    $image_exists = false;
+                }
 
-                if( !strstr( $yacht->images, $new_image[0] ) ) {
+                if( !$image_exists ) {
                     $result = get_yacht_image( $image );
 
                     $pos = strpos($js, 'PicDescription[' . $i . ']');
@@ -476,7 +487,7 @@ function fetch_yachtworld_images() {
 
                     if ( ! is_wp_error( $result ) ) {
                         write_log( 'Success: Downloaded ' . $image );
-                        $images[] = array(
+                        $new_images[] = array(
                             'original' => str_replace( '640x465_', '', $result),
                             'resized' => $result,
                             'caption' => $caption,
@@ -485,15 +496,41 @@ function fetch_yachtworld_images() {
                         write_log( array('Failure: Unable to download' . $image, $result) );
                     }
                 } else {
+                    $new_images[] = $image_exists[0];
                     write_log( 'NOTICE: Image exists ' . $image );
                 }
 
                 $i++;
             }
 
+            $delete_images = array_filter( $images, function ( $item ) use ( $new_images ) {
+                foreach ( $new_images as $image ) {
+                    if( $item === $image )
+                        return false;
+                }
+                return true;
+            });
+
+            if( !empty( $delete_images ) ) {
+                write_log( 'NOTICE: Following images were not located' );
+                write_log( $delete_images );
+
+                foreach ( $delete_images as $delete_image ) {
+                    $image_paths = array(
+                        get_home_path() . parse_url( $delete_image['original'], PHP_URL_PATH ),
+                        get_home_path() . parse_url( $delete_image['resized'], PHP_URL_PATH )
+                    );
+
+                    write_log( 'NOTICE: Deleting following images' );
+                    write_log( $image_paths );
+
+                    selenenw_delete_files( $image_paths );
+                }
+            }
+
             if ( !empty( $images ) ) {
                 $yacht_data = array(
-                    'images' => json_encode( $images ),
+                    'images' => json_encode( $new_images ),
                 );
 
                 if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
@@ -731,4 +768,11 @@ function selenenw_get_model_listing_form_callback() {
 
     echo ( !empty( $response ) ) ? json_encode( $response ) : 0;
     exit;
+}
+
+function selenenw_delete_files( $files ) {
+    foreach ( $files as $file ) {
+        if ( file_exists ( $file ) )
+            unlink( $file );
+    }
 }
