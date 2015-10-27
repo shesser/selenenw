@@ -914,7 +914,7 @@ div.radio input 						{opacity: 0;filter: alpha(opacity=0);-moz-opacity: 0;borde
 .ui-datepicker-month, .ui-datepicker-year {width:30%;margin:0 10px;}
 
 .item-bottom-strip {background: #000 none repeat scroll 0 0;bottom: 0;height: 20%;opacity: 0.65;position: absolute !important;width: 100%;}
-.item-bottom-strip h1 {color: #fff;padding: 10px 0;}
+.item-bottom-strip h2 {color: #fff;padding: 15px 0;}
 
 /* 30 PRINT CSS*/
 @media print {
