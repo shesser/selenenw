@@ -333,7 +333,7 @@ function fetch_yachtworld_detail() {
                 );
 
                 if( !is_null( $yacht->images ) ) {
-                    $delete_images = json_decode( $yacht->images );
+                    $delete_images = json_decode( $yacht->images, true );
 
                     foreach( $delete_images as $delete_image ) {
                         $image_paths[] = get_home_path() . parse_url( $delete_image['original'], PHP_URL_PATH );
