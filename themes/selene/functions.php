@@ -322,97 +322,129 @@ function fetch_yachtworld_detail() {
             @$doc->loadHTML( $html );
             $xpath = new DOMXpath( $doc );
 
-            $title = $xpath->document->getElementsByTagName('h3')->item(0)->nodeValue;
+            //Making sure that listing still exists on YachtWorld
+            $deleted_message = 'This boat can no longer be found in our database.';
 
-            $lis = $xpath->query('/html/body/td[2]/ul/li');
-            $highlights = '';
-            foreach ( $lis as $li ) {
-                $highlights .= trim( $li->nodeValue ) . '<br/>';
-            }
+            if(stripos( $xpath->document->getElementsByTagName('body')->item(0)->nodeValue, $deleted_message ) !== false) {
+                write_log('Boat ' . $yacht->id . ' has been deleted from yachtworld. Initiating delete process...');
+                require_once(ABSPATH . 'wp-admin/includes/file.php');
+                $image_paths = array(
+                    get_home_path() . parse_url( $yacht->primary_image, PHP_URL_PATH ),
+                );
 
-            $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
+                if( !is_null( $yacht->images ) ) {
+                    $delete_images = json_decode( $yacht->images );
 
-            if( $yacht->is_selenenw )
-                $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
-            else
-                $full_spec_html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&units=Feet&currency=USD&access=Public&listing_id=&url=');
-
-            if ( $full_spec_html ) {
-                write_log('Success: Fetched full specs from yachtworld');
-
-                @$doc->loadHTML( $full_spec_html );
-                $xpath = new DOMXpath( $doc );
-
-                //$full_specs = trim( str_replace( array('<td>', '</td>'), '', $doc->saveHTML( $xpath->query('/html/body/div[3]/table/tbody/tr/td')->item(0) ) ) );
-
-                $full_specs = $xpath->query('/html/body/div[3]/table/tbody/tr/td/strong');
-                $full_specs_data = array();
-
-                foreach ( $full_specs as $specs ) {
-                    $next_sibling = $specs->nextSibling;
-
-                    while( !is_null( $next_sibling ) && $next_sibling->nodeName != 'strong' ) {
-                        if( $next_sibling->nodeName == '#text' && $next_sibling->nodeValue != '' ) {
-                            $tmp = explode( ':', $next_sibling->nodeValue );
-                            if( count( $tmp ) > 1 && end ( $tmp ) != '' ) {
-                                $full_specs_data[$specs->nodeValue][] = array_map( 'trim', $tmp );
-                            } else {
-                                $full_specs_data[trim( $specs->nodeValue )][] = trim( $tmp[0] );
-                            }
-                        }
-
-                        $next_sibling = $next_sibling->nextSibling;
+                    foreach( $delete_images as $delete_image ) {
+                        $image_paths[] = get_home_path() . parse_url( $delete_image['original'], PHP_URL_PATH );
+                        $image_paths[] = get_home_path() . parse_url( $delete_image['resized'], PHP_URL_PATH );
                     }
                 }
 
-                $i = 4;
-                $terminate = false;
-                $features_data = array();
-                do {
-                    $features = $xpath->query('/html/body/div[' . $i . ']/table/tr/td/b');
+                write_log( 'NOTICE: Deleting following images' );
+                write_log( $image_paths );
 
-                    if( $features->length > 0 && $features->item(0)->nodeValue != 'Disclaimer' && $features->item(0)->nodeValue != 'Default Disclaimer') {
-                        $next_sibling = $features->item(0)->nextSibling;
+                selenenw_delete_files( $image_paths );
+                write_log( 'NOTICE: Images deleted' );
 
-                        while( !is_null( $next_sibling ) ) {
+                if( !$wpdb->delete( $wpdb->prefix . 'yacht', array( 'id' => $yacht->id ) ) ) {
+                    write_log('Success: Boat ' . $yacht->id . ' deleted successfully');
+                } else {
+                    write_log('Failure: Unable to delete boat ' . $yacht->id);
+                }
+            } else {
+                $title = $xpath->document->getElementsByTagName('h3')->item(0)->nodeValue;
 
-                            if( $next_sibling->hasChildNodes() ) {
-                                foreach ( $next_sibling->childNodes as $child_node ) {
-                                    $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $child_node->nodeValue ) );
-                                    if( $node_value != '' ) {
-                                        $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
-                                    }
-                                }
-                            } else {
-                                $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $next_sibling->nodeValue ) );
-                                if( $node_value != '' ) {
-                                    $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                $lis = $xpath->query('/html/body/td[2]/ul/li');
+                $highlights = '';
+                foreach ( $lis as $li ) {
+                    $highlights .= trim( $li->nodeValue ) . '<br/>';
+                }
+
+                $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
+
+                if( $yacht->is_selenenw )
+                    $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
+                else
+                    $full_spec_html = selenenw_get_page('http://www.yachtworld.com/privatelabel/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&units=Feet&currency=USD&access=Public&listing_id=&url=');
+
+                if ( $full_spec_html ) {
+                    write_log('Success: Fetched full specs from yachtworld');
+
+                    @$doc->loadHTML( $full_spec_html );
+                    $xpath = new DOMXpath( $doc );
+
+                    //$full_specs = trim( str_replace( array('<td>', '</td>'), '', $doc->saveHTML( $xpath->query('/html/body/div[3]/table/tbody/tr/td')->item(0) ) ) );
+
+                    $full_specs = $xpath->query('/html/body/div[3]/table/tbody/tr/td/strong');
+                    $full_specs_data = array();
+
+                    foreach ( $full_specs as $specs ) {
+                        $next_sibling = $specs->nextSibling;
+
+                        while( !is_null( $next_sibling ) && $next_sibling->nodeName != 'strong' ) {
+                            if( $next_sibling->nodeName == '#text' && $next_sibling->nodeValue != '' ) {
+                                $tmp = explode( ':', $next_sibling->nodeValue );
+                                if( count( $tmp ) > 1 && end ( $tmp ) != '' ) {
+                                    $full_specs_data[$specs->nodeValue][] = array_map( 'trim', $tmp );
+                                } else {
+                                    $full_specs_data[trim( $specs->nodeValue )][] = trim( $tmp[0] );
                                 }
                             }
 
                             $next_sibling = $next_sibling->nextSibling;
                         }
-                        $i++;
-                    } else {
-                        $terminate = true;
                     }
-                } while( !$terminate );
 
-                $yacht_data = array(
-                    'title' => $title,
-                    'highlights' => $highlights,
-                    'description' => $description,
-                    'full_specs' => json_encode($full_specs_data),
-                    'features' => json_encode( $features_data ),
-                );
+                    $i = 4;
+                    $terminate = false;
+                    $features_data = array();
+                    do {
+                        $features = $xpath->query('/html/body/div[' . $i . ']/table/tr/td/b');
 
-                if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
-                    write_log('Success: Updated details in DB');
+                        if( $features->length > 0 && $features->item(0)->nodeValue != 'Disclaimer' && $features->item(0)->nodeValue != 'Default Disclaimer') {
+                            $next_sibling = $features->item(0)->nextSibling;
+
+                            while( !is_null( $next_sibling ) ) {
+
+                                if( $next_sibling->hasChildNodes() ) {
+                                    foreach ( $next_sibling->childNodes as $child_node ) {
+                                        $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $child_node->nodeValue ) );
+                                        if( $node_value != '' ) {
+                                            $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                        }
+                                    }
+                                } else {
+                                    $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $next_sibling->nodeValue ) );
+                                    if( $node_value != '' ) {
+                                        $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                    }
+                                }
+
+                                $next_sibling = $next_sibling->nextSibling;
+                            }
+                            $i++;
+                        } else {
+                            $terminate = true;
+                        }
+                    } while( !$terminate );
+
+                    $yacht_data = array(
+                        'title' => $title,
+                        'highlights' => $highlights,
+                        'description' => $description,
+                        'full_specs' => json_encode($full_specs_data),
+                        'features' => json_encode( $features_data ),
+                    );
+
+                    if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
+                        write_log('Success: Updated details in DB');
+                    } else {
+                        write_log('Failure: Unable to update DB');
+                    }
                 } else {
-                    write_log('Failure: Unable to update DB');
+                    write_log('Failure: Unable to fetch full specs from yachtworld');
                 }
-            } else {
-                write_log('Failure: Unable to fetch full specs from yachtworld');
             }
         } else {
             write_log('Failure: Unable to fetch details page for ' . $yacht->id . 'from yachtworld');
@@ -447,6 +479,7 @@ function fetch_yachtworld_images() {
 
             $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
             $js = $xpath->query('/html/head/script')->item(0)->childNodes->item(0)->nodeValue;
+            $js->
 
             $new_images = array();
             if( !is_null($yacht->images) ){
