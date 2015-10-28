@@ -347,7 +347,7 @@ function fetch_yachtworld_detail() {
                 selenenw_delete_files( $image_paths );
                 write_log( 'NOTICE: Images deleted' );
 
-                if( !$wpdb->delete( $wpdb->prefix . 'yacht', array( 'id' => $yacht->id ) ) ) {
+                if( !$wpdb->delete( $wpdb->prefix . 'yachts', array( 'id' => $yacht->id ) ) ) {
                     write_log('Success: Boat ' . $yacht->id . ' deleted successfully');
                 } else {
                     write_log('Failure: Unable to delete boat ' . $yacht->id);
