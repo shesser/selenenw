@@ -116,7 +116,7 @@ function selenenw_class_names( $classes ) {
     // the template. So we have removed the blog class
     if ( $classes[0] == 'blog' )
         unset( $classes[0] );
-    else if ( $classes[3] == 'page-template-yacht-listing-template' )
+    else if ( $classes[3] == 'page-template-yacht-listing-template' || $classes[4] == 'page-template-yacht-listing-template' )
         $classes[] = 'sales';
 
     // return the $classes array
