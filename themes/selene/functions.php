@@ -507,7 +507,7 @@ function fetch_yachtworld_images() {
                     });
                 }
 
-                if( !$image_exists && !selenenw_images_exist( $image_exists ) ) {
+                if( !$image_exists || !selenenw_images_exist( $image_exists ) ) {
                     $result = get_yacht_image( $image );
 
                     $pos = strpos($js, 'PicDescription[' . $i . ']');
@@ -811,11 +811,9 @@ function selenenw_images_exist( $images ) {
         $original = get_home_path() . parse_url( $images['original'], PHP_URL_PATH );
         $resized = get_home_path() . parse_url( $images['resized'], PHP_URL_PATH );
 
-        if ( file_exists($original) && file_exists($resized) )
-            return true;
-        else
+        if ( !file_exists($original) || !file_exists($resized) )
             return false;
-    } else {
-        return true;
     }
+
+    return true;
 }
