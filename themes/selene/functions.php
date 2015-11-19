@@ -808,6 +808,7 @@ function selenenw_delete_files( $files ) {
 
 function selenenw_images_exist( $images ) {
     if( is_array( $images ) ) {
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
         $original = get_home_path() . parse_url( $images['original'], PHP_URL_PATH );
         $resized = get_home_path() . parse_url( $images['resized'], PHP_URL_PATH );
 
