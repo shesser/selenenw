@@ -479,7 +479,6 @@ function fetch_yachtworld_images() {
 
             $columns = $xpath->query('/html/body/table/tr[4]/td/div/table/tr/td');
             $js = $xpath->query('/html/head/script')->item(0)->childNodes->item(0)->nodeValue;
-            $js->
 
             $new_images = array();
             if( !is_null($yacht->images) ){
@@ -558,7 +557,7 @@ function fetch_yachtworld_images() {
                 }
             }
 
-            if ( !empty( $images ) ) {
+            if ( !empty( $new_images ) ) {
                 $yacht_data = array(
                     'images' => json_encode( $new_images ),
                 );
