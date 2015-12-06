@@ -506,8 +506,8 @@ function fetch_yachtworld_images() {
                         return false;
                     });
                 }
-
-                if( !$image_exists || !selenenw_images_exist( current( $image_exists ) ) ) {
+                
+if( !$image_exists || !selenenw_images_exist( current( $image_exists ) ) ) {
                     $result = get_yacht_image( $image );
 
                     $pos = strpos($js, 'PicDescription[' . $i . ']');
