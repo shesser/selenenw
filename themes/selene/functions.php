@@ -358,9 +358,11 @@ function fetch_yachtworld_detail() {
             } else {
                 $script = $doc->saveHTML( $xpath->query('/html/body')->item(0) );
                 $url_start_pos = stripos($script, "'file': '");
-                if( $url_start_pos !== false ) {
+                if( $url_start_pos !== false  ) {
                     $url_length = stripos($script, "',", $url_start_pos) - $url_start_pos - 9;
                     $video_url = substr($script, $url_start_pos + 9, $url_length);
+                    if ( $video_url == 'null' )
+                        $video_url = 0;
                 } else {
                     $video_url = 0;
                 }
