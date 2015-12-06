@@ -144,7 +144,7 @@ function add_rewrite_rules($rules) {
 add_filter('rewrite_rules_array', 'add_rewrite_rules');
 
 function number_to_words ( $number ) {
-    $number_in_words = array( 'one', 'two', 'three', 'four' );
+    $number_in_words = array( 'one', 'two', 'three', 'four', 'five' );
     return $number_in_words[ $number - 1 ];
 }
 
@@ -298,6 +298,9 @@ function save_yacht_listing( $url, $is_selenenw = false ) {
 }
 //add_action ('fetch_yachtworld_listing', 'save_yacht_listing()');
 
+/**
+ *
+ */
 function fetch_yachtworld_detail() {
     global $wpdb;
 
@@ -353,6 +356,15 @@ function fetch_yachtworld_detail() {
                     write_log('Failure: Unable to delete boat ' . $yacht->id);
                 }
             } else {
+                $script = $doc->saveHTML( $xpath->query('/html/body')->item(0) );
+                $url_start_pos = stripos($script, "'file': '");
+                if( $url_start_pos !== false ) {
+                    $url_length = stripos($script, "',", $url_start_pos) - $url_start_pos - 9;
+                    $video_url = substr($script, $url_start_pos + 9, $url_length);
+                } else {
+                    $video_url = 0;
+                }
+
                 $title = $xpath->document->getElementsByTagName('h3')->item(0)->nodeValue;
 
                 $lis = $xpath->query('/html/body/td[2]/ul/li');
@@ -435,6 +447,7 @@ function fetch_yachtworld_detail() {
                         'description' => $description,
                         'full_specs' => json_encode($full_specs_data),
                         'features' => json_encode( $features_data ),
+                        'video_url' => $video_url,
                     );
 
                     if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
@@ -817,4 +830,42 @@ function selenenw_images_exist( $images ) {
     }
 
     return true;
+}
+
+function selenenw_get_video ( $video_url ) {
+    $providers = array(
+        'youtube' => array(
+            'youtu.be',
+            'youtube.com',
+        ),
+    );
+    $video_provider = false;
+
+    $video_url = str_replace( array('http://', 'https://', 'www.'), '', $video_url );
+    $video_url_array = explode( '/', $video_url );
+
+    foreach ($providers as $provider) {
+        if ( is_array( array_keys( $provider, $video_url_array[0] ) ) ) {
+            $video_provider =  key($providers);
+            break;
+        }
+    }
+
+    $video_query_str = end( $video_url_array );
+    $video_url_array = explode( '&', $video_query_str );
+    $video_key = str_replace( 'watch?v=', '', $video_url_array[0] );
+
+    if( $video_provider ) {
+        $src = '';
+
+        switch( $video_provider ) {
+            case 'youtube':
+                $src = 'https://www.youtube.com/embed/' . $video_key;
+                break;
+        }
+
+        return $src;
+    } else {
+        return '';
+    }
 }

@@ -14,9 +14,12 @@ if( isset( $wp_query->query_vars['id'] ) ) {
         $number_of_tabs = 2;
         $full_specs = json_decode( $yacht->full_specs );
         $features = json_decode( $yacht->features );
+        $video_url = $yacht->video_url;
         if ( !empty( $full_specs ) )
             $number_of_tabs++;
         if ( !empty( $features ) )
+            $number_of_tabs++;
+        if ( $video_url )
             $number_of_tabs++;
 
         ?>
@@ -72,7 +75,12 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                                 <span class="icojam_anchor"></span> Equipment
                             </a></li>
                         <?php endif; ?>
-                        <li><a href="#tab4" title="Contact Broker">
+                        <?php if ( $video_url ) : ?>
+                            <li><a href="#tab4" title="Video">
+                                    <span class="icojam_play"></span> Video
+                                </a></li>
+                        <?php endif; ?>
+                        <li><a href="#tab5" title="Contact Broker">
                                 <span class="icojam_target"></span> Contact Broker
                             </a></li>
                         <!--<li><a href="#tab5" title="Get Brochure">
@@ -159,8 +167,23 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                     </article>
                     <!-- //Tab Content-->
 
+                    <?php if( $video_url ) : ?>
                     <!-- Tab Content-->
                     <article class="tab-content" id="tab4">
+                        <div class="row">
+                            <!-- FullWidth -->
+                            <div class="full-width">
+                                <h2><?php echo $yacht->title; ?></h2>
+                                <iframe width="560" height="425" src="<?php echo selenenw_get_video($video_url); ?>" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <!-- //FullWidth -->
+                        </div>
+                    </article>
+                    <!-- //Tab Content-->
+                    <?php endif; ?>
+
+                    <!-- Tab Content-->
+                    <article class="tab-content" id="tab5">
                         <div class="row">
                             <!-- ThreeFourth -->
                             <div class="three-fourth">
@@ -178,28 +201,6 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                                 </div>
                             </aside>
                             <!-- //OneFourth -->
-                        </div>
-                    </article>
-                    <!-- //Tab Content-->
-
-                    <!-- Tab Content-->
-                    <article class="tab-content" id="tab5">
-                        <div class="row">
-                            <!-- FullWidth -->
-                            <div class="full-width">
-                                <h2>Get brochure</h2>
-                                <ul class="icons">
-                                    <li><a href="#"><span class="icojam_pdf"></span> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.pdf (500 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_ppt"></span> Totam rem aperiam eaque ipsa.ppt (735 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_doc"></span> Quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.doc (349 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_ttf"></span> Nemo enim ipsam voluptatem.ttf (300 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_zip"></span> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.zip (1500 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_xls"></span> Totam rem aperiam eaque ipsa.xls (50 kb)</a></li>
-                                    <li><a href="#"><span class="icojam_wma"></span> Quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.wma (2 Mb)</a></li>
-                                    <li><a href="#"><span class="icojam_jpg"></span> Nemo enim ipsam voluptatem.jpg (129 kb)</a></li>
-                                </ul>
-                            </div>
-                            <!-- //FullWidth -->
                         </div>
                     </article>
                     <!-- //Tab Content-->
