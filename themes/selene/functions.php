@@ -144,7 +144,7 @@ function add_rewrite_rules($rules) {
 add_filter('rewrite_rules_array', 'add_rewrite_rules');
 
 function number_to_words ( $number ) {
-    $number_in_words = array( 'one', 'two', 'three', 'four', 'five' );
+    $number_in_words = array( 'one', 'two', 'three', 'four', 'five', 'six' );
     return $number_in_words[ $number - 1 ];
 }
 

@@ -164,9 +164,11 @@
 			$('.page-template-yacht-detail-template .content .tabs li:first').addClass('current');
 
 			$('.page-template-yacht-detail-template .content .tabs a').on('click', function (e) {
-				e.preventDefault();
-				$(this).closest('li').addClass('current').siblings().removeClass('current');
-				$($(this).attr('href')).show().siblings('.tab-content').hide();
+				if($(this).attr('href').indexOf('https://') < 0 ) {
+					e.preventDefault();
+					$(this).closest('li').addClass('current').siblings().removeClass('current');
+					$($(this).attr('href')).show().siblings('.tab-content').hide();
+				}
 			});
 
 			$('.page-template-model-detail-template .content .tab-content').hide().first().show();
