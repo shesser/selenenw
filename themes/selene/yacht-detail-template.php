@@ -15,13 +15,15 @@ if( isset( $wp_query->query_vars['id'] ) ) {
         $full_specs = json_decode( $yacht->full_specs );
         $features = json_decode( $yacht->features );
         $video_url = $yacht->video_url;
+        $interactive_tour = $yacht->interactive_tour;
         if ( !empty( $full_specs ) )
             $number_of_tabs++;
         if ( !empty( $features ) )
             $number_of_tabs++;
         if ( $video_url )
             $number_of_tabs++;
-
+        if ( $interactive_tour )
+            $number_of_tabs++;
         ?>
 
         <!-- Main -->
@@ -78,6 +80,11 @@ if( isset( $wp_query->query_vars['id'] ) ) {
                         <?php if ( $video_url ) : ?>
                             <li><a href="#tab4" title="Video">
                                     <span class="icojam_play"></span> Video
+                                </a></li>
+                        <?php endif; ?>
+                        <?php if ( $interactive_tour ) : ?>
+                            <li><a href="<?php echo $interactive_tour; ?>" target="_blank" title="3D Virtual Tour">
+                                    <span class="icojam_eye_22"></span> 3D Virtual Tour
                                 </a></li>
                         <?php endif; ?>
                         <li><a href="#tab5" title="Contact Broker">

@@ -327,8 +327,12 @@ function fetch_yachtworld_detail() {
 
             //Making sure that listing still exists on YachtWorld
             $deleted_message = 'This boat can no longer be found in our database.';
-
-            if(stripos( $xpath->document->getElementsByTagName('body')->item(0)->nodeValue, $deleted_message ) !== false) {
+            $sold = '';
+            if( $xpath->query('/html/body/td/ul/li/span[@class=\'active_field\']')->length > 0 ) {
+                $sold = $xpath->query('/html/body/td/ul/li/span[@class=\'active_field\']')->item(0)->nodeValue;
+            }
+            if( stripos( $xpath->document->getElementsByTagName('body')->item(0)->nodeValue, $deleted_message ) !== false ||
+                $sold == 'Sold') {
                 write_log('Boat ' . $yacht->id . ' has been deleted from yachtworld. Initiating delete process...');
                 require_once(ABSPATH . 'wp-admin/includes/file.php');
                 $image_paths = array(
@@ -376,6 +380,10 @@ function fetch_yachtworld_detail() {
                 }
 
                 $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
+
+                $d_url_start = strpos($description, 'https://my.matterport.com/');
+                $d_url_end = strpos($description, PHP_EOL, $d_url_start) - $d_url_start;
+                $interactive_tour = trim(strip_tags(substr($description, $d_url_start, $d_url_end)));
 
                 if( $yacht->is_selenenw )
                     $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
@@ -450,6 +458,7 @@ function fetch_yachtworld_detail() {
                         'full_specs' => json_encode($full_specs_data),
                         'features' => json_encode( $features_data ),
                         'video_url' => $video_url,
+                        'interactive_tour' => $interactive_tour,
                     );
 
                     if ( $wpdb->update( $wpdb->prefix . 'yachts', $yacht_data, array( 'id' => $yacht->id ) ) ) {
