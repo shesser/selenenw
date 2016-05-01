@@ -381,9 +381,12 @@ function fetch_yachtworld_detail() {
 
                 $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
 
+                $interactive_tour = '';
                 $d_url_start = strpos($description, 'https://my.matterport.com/');
-                $d_url_end = strpos($description, PHP_EOL, $d_url_start) - $d_url_start;
-                $interactive_tour = trim(strip_tags(substr($description, $d_url_start, $d_url_end)));
+                if($d_url_start !== false) {
+                    $d_url_end = strpos($description, PHP_EOL, $d_url_start) - $d_url_start;
+                    $interactive_tour = trim(strip_tags(substr($description, $d_url_start, $d_url_end)));
+                }
 
                 if( $yacht->is_selenenw )
                     $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
