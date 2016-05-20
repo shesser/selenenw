@@ -381,13 +381,6 @@ function fetch_yachtworld_detail() {
 
                 $description = str_replace( array('<font face="Verdana, Helvetica, sans-serif">', '</font>'), '', $doc->saveHTML( $xpath->document->getElementsByTagName('font')->item(0) ) );
 
-                $interactive_tour = '';
-                $d_url_start = strpos($description, 'https://my.matterport.com/');
-                if($d_url_start !== false) {
-                    $d_url_end = strpos($description, PHP_EOL, $d_url_start) - $d_url_start;
-                    $interactive_tour = trim(strip_tags(substr($description, $d_url_start, $d_url_end)));
-                }
-
                 if( $yacht->is_selenenw )
                     $full_spec_html = selenenw_get_page('http://www.yachtworld.com/core/listing/pl_boat_full_detail.jsp?slim=' . $yacht->slim . '&boat_id=' . $yacht->id . '&ybw=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&&units=Feet&access=Public&listing_id=&url=&hosturl=seleneyachtsnorthwest&&ywo=seleneyachtsnorthwest&');
                 else
@@ -424,6 +417,7 @@ function fetch_yachtworld_detail() {
                     $i = 4;
                     $terminate = false;
                     $features_data = array();
+                    $interactive_tour = '';
                     do {
                         $features = $xpath->query('/html/body/div[' . $i . ']/table/tr/td/b');
 
@@ -434,9 +428,19 @@ function fetch_yachtworld_detail() {
 
                                 if( $next_sibling->hasChildNodes() ) {
                                     foreach ( $next_sibling->childNodes as $child_node ) {
-                                        $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $child_node->nodeValue ) );
-                                        if( $node_value != '' ) {
-                                            $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                        //Adding exception for 3D Virtual Tour
+                                        if( $features->item(0)->nodeValue == '3D Virtual Tour' ) {
+                                            $tour_html = $child_node->ownerDocument->saveHTML();
+                                            $d_url_start = strpos($tour_html, 'https://my.matterport.com/');
+                                            if($d_url_start !== false) {
+                                                $d_url_end = strpos($tour_html, '">', $d_url_start) - $d_url_start;
+                                                $interactive_tour = trim(strip_tags(substr($tour_html, $d_url_start, $d_url_end)));
+                                            }
+                                        } else {
+                                            $node_value = str_replace( array("\xC2", "\xA0"), ' ', trim( $child_node->nodeValue ) );
+                                            if( $node_value != '' ) {
+                                                $features_data[trim( $features->item(0)->nodeValue )][] = $node_value;
+                                            }
                                         }
                                     }
                                 } else {
