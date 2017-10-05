@@ -521,6 +521,8 @@ function fetch_yachtworld_images() {
             $i = 1;
 
             foreach ( $columns as $column ) {
+                if($i == 41) break;
+
                 $image = $xpath->query('img/@src', $column)->item(0)->nodeValue;
                 $image = substr( $image, 0, strpos( $image, '?f=' ) );
 
